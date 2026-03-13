@@ -367,3 +367,48 @@ Cookies have a 4KB size limit per cookie. Stack Auth tokens (JWTs with user data
 ---
 
 *This critique is intended to strengthen the implementation. Every blocking issue must be resolved or explicitly accepted (with documented risk) before the builder starts work.*
+
+---
+
+## ADDENDUM: Post-Architecture Review (Updated After Tasks #1 and #2 Completed)
+
+After reviewing `docs/plans/backend-architecture.md`, `docs/stack-auth-research.md`, and `docs/plans/proxy-api-surface.md`, here is the updated status of each blocking issue:
+
+### Framework Choice: Express -- ACCEPTABLE
+
+The architect chose Express v5. Justification is solid (Section 1 of backend-architecture.md). For a 6-route proxy server, this is fine. The streaming pattern using `res.write()` + `res.flushHeaders()` is correct. No objection.
+
+### Updated Blocking Issue Status
+
+| # | Issue | Original | Updated | Notes |
+|---|-------|----------|---------|-------|
+| B1 | `vite.config.ts` env loading | BLOCKING | RESOLVED | Architect explicitly removes `process.env.API_KEY` define and calls out the `loadEnv` fix in Section 7, Rule 4. Builder must implement this. |
+| B2 | SvgModal XSS | BLOCKING | STILL BLOCKING | Not addressed anywhere in architect's docs. Must be fixed before auth tokens are in the browser. |
+| B3 | No offline degradation | BLOCKING | DOWNGRADED to HIGH | Architect acknowledges in Section 13.5 but defers: "For MVP, show an error." Acceptable for MVP, but must be tracked for v2. |
+| B4 | No migration rollback | BLOCKING | STILL BLOCKING | Architect's migration (Section 6) wraps in try/catch but does NOT backup data first. Add `exportBackup()` call before migration. |
+| B5 | Syllabus ID not updated | BLOCKING | RESOLVED | Architect's migration SQL (Section 6) explicitly updates syllabus `id` column. Well done. |
+| B6 | React CDN dual instance | BLOCKING | STILL BLOCKING | Not addressed in any document. This is a showstopper that must be tested before any Stack Auth code is written. |
+| B7 | Proxy header stripping | BLOCKING | DOWNGRADED to HIGH | Architect's code constructs fresh upstream requests with server-side API keys (Section 9). Client headers are NOT forwarded to LLM APIs. Implicit fix, but builder should add explicit check that no client `Authorization`/`x-api-key` headers reach upstream. |
+| B8 | Deployment model decision | BLOCKING | STILL OPEN | Architecture assumes backend exists and proceeds. The "why" is not stated. Acceptable to proceed with backend, but document the assumption. |
+
+### New Issues Found in Architecture
+
+**NEW-1 (MEDIUM): Auth header inconsistency between proxy-api-surface.md and backend-architecture.md**
+
+`proxy-api-surface.md` says auth token goes in `Authorization: Bearer <token>` header, but `backend-architecture.md` Section 4 (middleware) reads from `x-stack-access-token` header. The scout's research (Section 3) also uses `x-stack-access-token`. The builder must use ONE header consistently. Recommend `x-stack-access-token` since that aligns with Stack Auth conventions and avoids collision with the `Authorization` header the proxy uses for upstream API calls.
+
+**NEW-2 (MEDIUM): 10MB body limit may be too small for multi-image chat**
+
+`backend-architecture.md` Section 8 sets `express.json({ limit: '10mb' })`. But the chat stream endpoint accepts a `history` array where each message can have base64 image attachments. A conversation with 5 images at 2MB each = 10MB just for history. Consider 20MB or use streaming upload for document processing.
+
+**NEW-3 (LOW): `express-rate-limit` is per-IP, not per-user**
+
+Section 11 suggests rate limiting by IP. Behind a reverse proxy (Cloudflare, nginx), all clients may share the same IP. Rate limiting should be per user ID from the JWT, not per IP.
+
+### Revised Summary: 3 Remaining Blockers
+
+1. **B2: SvgModal XSS** -- Must sanitize SVG before rendering. Install DOMPurify.
+2. **B4: Migration rollback** -- Add backup before migration.
+3. **B6: React CDN dual instance** -- Test and resolve before Stack Auth integration.
+
+These three must be fixed. Everything else is tracked as HIGH/MEDIUM and acceptable for MVP with documented risk.
