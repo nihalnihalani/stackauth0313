@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { UserButton } from '@stackframe/stack';
 import { DEFAULT_CONFIG, MODES, MODELS } from '../constants';
 import { Message, AppConfig, Attachment } from '../types';
 import { streamResponse, generateTitle } from '../services/llmService';
@@ -16,10 +17,11 @@ import LiveInterface from './LiveInterface';
 
 interface ChatInterfaceProps {
   username: string;
+  displayName: string;
   onLogout: () => void;
 }
 
-const ChatInterface: React.FC<ChatInterfaceProps> = ({ username, onLogout }) => {
+const ChatInterface: React.FC<ChatInterfaceProps> = ({ username, displayName, onLogout }) => {
   const queryClient = useQueryClient();
   const [input, setInput] = useState('');
   const [modalSvg, setModalSvg] = useState<string | null>(null);
@@ -328,7 +330,7 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({ username, onLogout }) => 
       {/* Vertical Status Line */}
       <div className="fixed left-6 top-1/2 -translate-y-1/2 z-20 hidden md:flex items-center justify-center w-0 h-0 mix-blend-difference">
         <div className="-rotate-90 whitespace-nowrap text-xs text-white/30 tracking-[0.3em] select-none uppercase font-bold">
-          System_Ready // {username} // {config.mode}
+          System_Ready // {displayName} // {config.mode}
         </div>
       </div>
 
@@ -423,13 +425,9 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({ username, onLogout }) => 
           <i className="fa-solid fa-gear text-lg"></i>
         </button>
 
-        <button
-          onClick={onLogout}
-          className="text-white/40 hover:text-red-500 transition-colors ml-2"
-          title="Disconnect User"
-        >
-          <i className="fa-solid fa-power-off text-lg"></i>
-        </button>
+        <div className="ml-2">
+          <UserButton />
+        </div>
       </div>
 
       {/* Modals */}
