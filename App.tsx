@@ -1,31 +1,35 @@
-
-import React, { useState, useEffect } from 'react';
+import React, { useEffect } from 'react';
+import { useUser } from '@stackframe/stack';
 import ChatInterface from './components/ChatInterface';
-import LoginScreen from './components/LoginScreen';
+import AuthScreen from './components/AuthScreen';
 import { ensureUserExists } from './services/dbService';
 
 const App: React.FC = () => {
-  const [user, setUser] = useState<string | null>(() => {
-    return localStorage.getItem('nexus_user');
-  });
+  const user = useUser();
 
-  const handleLogin = (username: string) => {
-    ensureUserExists(username);
-    localStorage.setItem('nexus_user', username);
-    setUser(username);
-  };
+  // When user logs in, ensure they exist in local DB
+  useEffect(() => {
+    if (user) {
+      ensureUserExists(user.id);
+    }
+  }, [user]);
 
-  const handleLogout = () => {
-    localStorage.removeItem('nexus_user');
-    setUser(null);
+  const handleLogout = async () => {
+    if (user) {
+      await user.signOut();
+    }
   };
 
   return (
     <div className="min-h-screen w-full bg-black text-white font-mono overflow-hidden">
       {user ? (
-        <ChatInterface username={user} onLogout={handleLogout} />
+        <ChatInterface
+          username={user.id}
+          displayName={user.displayName || user.primaryEmail || user.id}
+          onLogout={handleLogout}
+        />
       ) : (
-        <LoginScreen onLogin={handleLogin} />
+        <AuthScreen />
       )}
     </div>
   );
