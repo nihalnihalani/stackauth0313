@@ -1,0 +1,7 @@
+{
+  "name": "Nexus: Collaborative AI Knowledge Base",
+  "description": "A collaborative student network where personal LLMs coexist. Features deep thinking for complex study, image generation/editing for visual notes, and real-time voice collaboration.",
+  "requestFramePermissions": [
+    "microphone"
+  ]
+}

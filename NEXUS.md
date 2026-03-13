@@ -1,4 +1,4 @@
-# HiveMind — Complete Project Analysis
+# Nexus — Complete Project Analysis
 
 > Collaborative AI Knowledge Base & Cognitive Accelerator for Students and Researchers
 
@@ -24,7 +24,7 @@
 
 ## Project Overview
 
-**HiveMind** is a browser-based, local-first AI learning platform. It combines multi-model LLM orchestration with a Socratic teaching engine, real-time SVG schematic generation, and a collaborative note-sharing system ("The Hive"). All user data is stored locally in the browser using AlaSQL — no backend server is required beyond the AI provider APIs.
+**Nexus** is a browser-based, local-first AI learning platform. It combines multi-model LLM orchestration with a Socratic teaching engine, real-time SVG schematic generation, and a collaborative note-sharing system ("The Hive"). All user data is stored locally in the browser using AlaSQL — no backend server is required beyond the AI provider APIs.
 
 **Key differentiators from standard chatbots:**
 - Dual-mode cognition (Direct vs. Socratic)
@@ -140,7 +140,7 @@ stackauth0313/
 ├── CLAUDE.md               # Claude Code project rules
 ├── README.md               # Original project README
 ├── stack-auth-docs.md      # Stack Auth documentation reference
-└── HIVEMIND.md             # This file — complete project analysis
+└── NEXUS.md                # This file — complete project analysis
 ```
 
 ---
@@ -355,7 +355,7 @@ All LLM calls go through `streamResponse()` which routes to the correct provider
 ## Components Breakdown
 
 ### `App.tsx` — Root Component
-- Checks `localStorage` for `hivemind_user`
+- Checks `localStorage` for `nexus_user`
 - Shows `LoginScreen` if no user, `ChatInterface` if logged in
 - Handles login (stores username) and logout (clears username)
 
@@ -523,7 +523,7 @@ Other providers (OpenAI, Anthropic, Ollama) are configured at runtime through th
 
 ### User Flow
 
-1. **Login**: Enter a username → stored in `localStorage` as `hivemind_user`
+1. **Login**: Enter a username → stored in `localStorage` as `nexus_user`
 2. **Chat**: Type a prompt → AI streams a response → messages saved to AlaSQL
 3. **Archive**: Hover a message → click "Archive" → AI generates title → saved as note
 4. **Import**: Click paperclip → upload PDF/image → AI extracts text → saved as note
@@ -587,4 +587,4 @@ STACK_SECRET_SERVER_KEY=<from Stack Auth dashboard — keep secret>
 
 ---
 
-*Generated from complete codebase analysis of the HiveMind project.*
+*Generated from complete codebase analysis of the Nexus project.*
