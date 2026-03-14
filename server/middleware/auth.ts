@@ -24,6 +24,12 @@ export async function requireAuth(req: Request, res: Response, next: NextFunctio
   const accessToken = req.headers['x-stack-access-token'] as string | undefined;
 
   if (!accessToken) {
+    // In development, allow unauthenticated requests
+    if (config.nodeEnv !== 'production') {
+      (req as AuthenticatedRequest).userId = 'dev-user';
+      next();
+      return;
+    }
     res.status(401).json({ error: 'Missing access token. Send x-stack-access-token header.' });
     return;
   }

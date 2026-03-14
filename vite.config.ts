@@ -15,6 +15,9 @@ export default defineConfig({
     },
   },
   plugins: [react()],
+  define: {
+    'process.env': '{}',
+  },
   resolve: {
     alias: {
       '@': path.resolve(__dirname, '.'),

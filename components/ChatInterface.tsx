@@ -27,8 +27,12 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({ username, displayName, on
 
   // Token getter for authenticated API calls
   const getToken = useCallback(async (): Promise<string | null> => {
-    const auth = await stackClientApp.getAuthJson();
-    return auth?.accessToken ?? null;
+    try {
+      const auth = await stackClientApp.getAuthJson();
+      return auth?.accessToken ?? null;
+    } catch {
+      return null;
+    }
   }, []);
 
   const [input, setInput] = useState('');
