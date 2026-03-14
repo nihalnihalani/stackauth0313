@@ -84,7 +84,13 @@ const LiveInterface: React.FC<LiveInterfaceProps> = ({ config, onClose, username
     isConnectedRef.current = false;
 
     try {
-      const ai = new GoogleGenAI({ apiKey: config.apiKey || process.env.API_KEY });
+      // Live Audio requires direct WebSocket access to Gemini API (cannot be proxied)
+      // Falls back to VITE_GEMINI_API_KEY env var since API keys moved server-side
+      const apiKey = import.meta.env.VITE_GEMINI_API_KEY || '';
+      if (!apiKey) {
+        throw new Error('VITE_GEMINI_API_KEY required for Live Audio (direct WebSocket connection)');
+      }
+      const ai = new GoogleGenAI({ apiKey });
       
       // Setup Audio Contexts
       // Use system default sample rate to prevent "different sample-rate" error
