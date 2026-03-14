@@ -14,6 +14,9 @@ export default defineConfig({
   resolve: {
     alias: {
       '@': path.resolve(__dirname, '.'),
+      // Ensure jose resolves to a single copy so vi.mock('jose') works
+      // for both test code and server/middleware/auth.ts imports
+      'jose': path.resolve(__dirname, 'node_modules/jose'),
     },
   },
 });
