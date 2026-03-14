@@ -29,11 +29,8 @@ export const MODES = {
 
 export const DEFAULT_CONFIG = {
   provider: PROVIDERS.GOOGLE,
-  apiKey: '',
-  baseUrl: '',
   model: MODELS.THINKING,
   mode: MODES.DIRECT,
-  systemInstruction: '' // Will be populated dynamically
 };
 
 export const SVG_SYSTEM_INSTRUCTION = `You are a stark, efficient, and futuristic AI assistant. Responses should be concise, logical, and formatted in Markdown. Aesthetics: Monochrome, Terminal, Cyberpunk.

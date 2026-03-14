@@ -1,0 +1,8 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(push *)",
+      "Bash(git push*)"
+    ]
+  }
+}
