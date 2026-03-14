@@ -54,7 +54,11 @@ export async function streamGoogle(params: {
   const result = await chatSession.sendMessageStream({ message: parts });
   for await (const chunk of result) {
     if (params.signal?.aborted) break;
-    if (chunk.text) params.onChunk(chunk.text);
+    if (chunk.text) {
+      params.onChunk(chunk.text);
+      // Yield to event loop so res.write() flushes to client
+      await new Promise(resolve => setImmediate(resolve));
+    }
   }
 }
 
