@@ -28,7 +28,7 @@ const mockCreateChatSession = vi.fn<(username: string, title?: string) => any>((
 
 vi.mock('../../services/dbService', () => ({
   initDB: vi.fn(),
-  ensureUserExists: (...args: any[]) => mockEnsureUserExists(...args),
+  ensureUserExists: (username: string) => mockEnsureUserExists(username),
   checkUserExists: vi.fn(() => true),
   createChatSession: (username: string, title?: string) => mockCreateChatSession(username, title),
   getChatSessions: (username: string) => mockGetChatSessions(username),
