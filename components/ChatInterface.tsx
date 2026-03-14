@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { UserButton, useUser } from '@stackframe/stack';
+import { UserButton } from '@stackframe/stack';
+import { stackClientApp } from '../stack';
 import { DEFAULT_CONFIG, MODES, MODELS } from '../constants';
 import { Message, AppConfig, Attachment } from '../types';
 import { streamResponse, generateTitle } from '../services/llmService';
@@ -23,14 +24,12 @@ interface ChatInterfaceProps {
 
 const ChatInterface: React.FC<ChatInterfaceProps> = ({ username, displayName, onLogout }) => {
   const queryClient = useQueryClient();
-  const user = useUser();
 
   // Token getter for authenticated API calls
   const getToken = useCallback(async (): Promise<string | null> => {
-    if (!user) return null;
-    const token = await user.getAuthJson();
-    return token?.accessToken ?? null;
-  }, [user]);
+    const auth = await stackClientApp.getAuthJson();
+    return auth?.accessToken ?? null;
+  }, []);
 
   const [input, setInput] = useState('');
   const [modalSvg, setModalSvg] = useState<string | null>(null);
