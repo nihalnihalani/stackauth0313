@@ -1,6 +1,6 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { UserButton } from '@stackframe/stack';
+import { UserButton, useUser } from '@stackframe/stack';
 import { DEFAULT_CONFIG, MODES, MODELS } from '../constants';
 import { Message, AppConfig, Attachment } from '../types';
 import { streamResponse, generateTitle } from '../services/llmService';
@@ -23,6 +23,15 @@ interface ChatInterfaceProps {
 
 const ChatInterface: React.FC<ChatInterfaceProps> = ({ username, displayName, onLogout }) => {
   const queryClient = useQueryClient();
+  const user = useUser();
+
+  // Token getter for authenticated API calls
+  const getToken = useCallback(async (): Promise<string | null> => {
+    if (!user) return null;
+    const token = await user.getAuthJson();
+    return token?.accessToken ?? null;
+  }, [user]);
+
   const [input, setInput] = useState('');
   const [modalSvg, setModalSvg] = useState<string | null>(null);
   const [showSettings, setShowSettings] = useState(false);
@@ -147,7 +156,7 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({ username, displayName, on
         let fullTextB = '';
 
         // Trigger two parallel streams
-        const streamA = streamResponse(config, updatedHistory, userText, (chunk) => {
+        const streamA = streamResponse(getToken, config, updatedHistory, userText, (chunk) => {
           fullTextA += chunk;
           queryClient.setQueryData(['messages', chatId], (old: Message[] | undefined) => {
              if (!old) return [];
@@ -155,7 +164,7 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({ username, displayName, on
           });
         }, signal);
 
-        const streamB = streamResponse(config, updatedHistory, userText, (chunk) => {
+        const streamB = streamResponse(getToken, config, updatedHistory, userText, (chunk) => {
             fullTextB += chunk;
             queryClient.setQueryData(['messages', chatId], (old: Message[] | undefined) => {
                if (!old) return [];
@@ -172,7 +181,7 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({ username, displayName, on
       } else {
         // Standard Single Stream
         let fullText = '';
-        await streamResponse(config, updatedHistory, userText, (chunk) => {
+        await streamResponse(getToken, config, updatedHistory, userText, (chunk) => {
             fullText += chunk;
             queryClient.setQueryData(['messages', chatId], (old: Message[] | undefined) => {
                if (!old) return [];
@@ -267,7 +276,7 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({ username, displayName, on
   };
 
   const handleArchive = async (text: string) => {
-    const title = await generateTitle(config, text);
+    const title = await generateTitle(getToken, config, text);
     saveNote({
         id: Date.now().toString(),
         title: title,
@@ -454,6 +463,7 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({ username, displayName, on
           onClose={() => setShowNotes(false)}
           onSvgClick={setModalSvg}
           config={config}
+          getToken={getToken}
         />
       )}
 
@@ -464,6 +474,7 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({ username, displayName, on
           config={config}
           onSvgClick={setModalSvg}
           onFork={handleSyllabusFork}
+          getToken={getToken}
         />
       )}
       
