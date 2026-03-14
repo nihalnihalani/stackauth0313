@@ -11,7 +11,6 @@
   },
   "dependencies": {
     "@google/genai": "^1.31.0",
-    "@stackframe/stack": "^2.8.77",
     "cors": "^2.8.5",
     "dotenv": "^16.4.7",
     "express": "^5.2.1",
