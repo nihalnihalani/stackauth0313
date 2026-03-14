@@ -1,6 +1,11 @@
 import { config } from '../../config.js';
 import { Message, Attachment } from '../../types.js';
 
+/** Strip API key patterns from error messages to prevent leaking secrets to clients */
+function sanitizeError(message: string): string {
+  return message.replace(/sk-[a-zA-Z0-9-_]{20,}|AIza[a-zA-Z0-9-_]{30,}/g, '[REDACTED]');
+}
+
 function getBaseUrl(): string {
   return config.openaiBaseUrl;
 }
@@ -69,7 +74,7 @@ export async function streamOpenAI(params: {
 
   if (!response.ok) {
     const err = await response.text();
-    throw new Error(`OpenAI Error: ${err}`);
+    throw new Error(`OpenAI Error: ${sanitizeError(err)}`);
   }
 
   await processStream(response, (line) => {
@@ -132,7 +137,7 @@ export async function processDocumentOpenAI(params: {
 
   if (!response.ok) {
     const err = await response.text();
-    throw new Error(`OpenAI Error: ${err}`);
+    throw new Error(`OpenAI Error: ${sanitizeError(err)}`);
   }
 
   const json = await response.json() as any;

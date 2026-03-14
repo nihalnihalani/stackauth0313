@@ -1,6 +1,11 @@
 import { config } from '../../config.js';
 import { Message, Attachment } from '../../types.js';
 
+/** Strip API key patterns from error messages to prevent leaking secrets to clients */
+function sanitizeError(message: string): string {
+  return message.replace(/sk-[a-zA-Z0-9-_]{20,}|AIza[a-zA-Z0-9-_]{30,}/g, '[REDACTED]');
+}
+
 async function processStream(response: Response, onLine: (line: string) => void): Promise<void> {
   const reader = response.body?.getReader();
   const decoder = new TextDecoder();
@@ -81,7 +86,7 @@ export async function streamAnthropic(params: {
 
   if (!response.ok) {
     const err = await response.text();
-    throw new Error(`Anthropic Error: ${err}`);
+    throw new Error(`Anthropic Error: ${sanitizeError(err)}`);
   }
 
   await processStream(response, (line) => {
@@ -150,7 +155,7 @@ export async function processDocumentAnthropic(params: {
 
   if (!response.ok) {
     const err = await response.text();
-    throw new Error(`Anthropic Error: ${err}`);
+    throw new Error(`Anthropic Error: ${sanitizeError(err)}`);
   }
 
   const json = await response.json() as any;
