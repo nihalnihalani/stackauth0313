@@ -87,7 +87,21 @@ export const streamResponse = async (
     throw new Error(`Server error (${response.status}): ${err}`);
   }
 
-  await readProxyStream(response, onChunk);
+  const contentType = response.headers.get('content-type') || '';
+  if (contentType.includes('application/json')) {
+    // JSON response — simulate streaming by sending text character by character
+    const data = await response.json();
+    const text = data.text || '';
+    const CHUNK = 8;
+    for (let i = 0; i < text.length; i += CHUNK) {
+      onChunk(text.slice(i, i + CHUNK));
+      // Small delay for visual streaming effect
+      await new Promise(r => setTimeout(r, 10));
+    }
+  } else {
+    // SSE streaming response
+    await readProxyStream(response, onChunk);
+  }
 };
 
 export const processDocument = async (

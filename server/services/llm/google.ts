@@ -2,8 +2,8 @@ import { GoogleGenAI } from '@google/genai';
 import { config } from '../../config.js';
 import { Message, Attachment } from '../../types.js';
 
-const FAST_MODEL = 'gemini-2.5-flash';
-const THINKING_MODEL = 'gemini-3-pro-preview';
+const FAST_MODEL = 'gemini-3-flash-preview';
+const THINKING_MODEL = 'gemini-3.1-pro-preview';
 
 function getAI() {
   return new GoogleGenAI({ apiKey: config.geminiApiKey });

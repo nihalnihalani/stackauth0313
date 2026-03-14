@@ -1,12 +1,18 @@
 
 
 export const MODELS = {
-  GEMINI_3: 'gemini-3-pro-preview',
-  GEMINI_2_5: 'gemini-2.5-flash',
-  // Complex reasoning
-  THINKING: 'gemini-3-pro-preview',
-  // Fast tasks
-  FAST: 'gemini-2.5-flash',
+  // Latest Gemini 3.1 series (March 2026)
+  GEMINI_3_1_PRO: 'gemini-3.1-pro-preview',
+  GEMINI_3_FLASH: 'gemini-3-flash-preview',
+  GEMINI_3_1_FLASH_LITE: 'gemini-3.1-flash-lite-preview',
+  // Complex reasoning (best quality)
+  THINKING: 'gemini-3.1-pro-preview',
+  // Fast tasks (balanced speed/quality)
+  FAST: 'gemini-3-flash-preview',
+  // Ultra fast (cheapest)
+  LITE: 'gemini-3.1-flash-lite-preview',
+  // Legacy
+  GEMINI_2_5_FLASH: 'gemini-2.5-flash',
   // Image Generation
   IMAGE_GEN: 'gemini-3-pro-image-preview',
   // Image Editing
