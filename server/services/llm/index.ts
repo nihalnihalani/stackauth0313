@@ -68,8 +68,12 @@ STRICT VISUALIZATION RULES (SVG):
 
 Tone: Patient, Encouraging, but Rigorous. Cyberpunk/Academic aesthetic.`;
 
-function getSystemInstruction(mode: string): string {
+export function getSystemInstructionForMode(mode: string): string {
   return mode === 'socratic' ? SOCRATIC_SYSTEM_INSTRUCTION : SVG_SYSTEM_INSTRUCTION;
+}
+
+function getSystemInstruction(mode: string): string {
+  return getSystemInstructionForMode(mode);
 }
 
 export async function streamLLMResponse(params: {

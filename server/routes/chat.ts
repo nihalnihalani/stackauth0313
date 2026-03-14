@@ -1,7 +1,7 @@
 import { Router, Request, Response } from 'express';
 import { GoogleGenAI } from '@google/genai';
 import { requireAuth } from '../middleware/auth.js';
-import { streamLLMResponse } from '../services/llm/index.js';
+import { streamLLMResponse, getSystemInstructionForMode } from '../services/llm/index.js';
 import { config } from '../config.js';
 import { ChatStreamRequest } from '../types.js';
 
@@ -28,21 +28,13 @@ chatRouter.post('/chat/stream', requireAuth, async (req: Request, res: Response)
 
   try {
     if (body.provider === 'google') {
-      // Direct Google streaming to bypass abstraction issues
+      // Direct Google API call (non-streaming to avoid for-await flush issues)
       const ai = new GoogleGenAI({ apiKey: config.geminiApiKey });
-      const chat = ai.chats.create({
-        model: body.model || 'gemini-2.5-flash',
-        config: { systemInstruction: body.systemInstruction || 'You are a helpful assistant. Be concise.' },
-        history: (body.history || []).filter((m: any) => m.role !== 'system').map((m: any) => ({
-          role: m.role,
-          parts: [{ text: m.text }],
-        })),
-      });
+      const systemInstruction = body.systemInstruction || getSystemInstructionForMode(body.mode || 'direct');
 
-      // Use non-streaming generateContent, then send result as SSE
       const result = await ai.models.generateContent({
         model: body.model || 'gemini-2.5-flash',
-        config: { systemInstruction: body.systemInstruction || 'You are a helpful assistant. Be concise.' },
+        config: { systemInstruction },
         contents: [
           ...(body.history || []).filter((m: any) => m.role !== 'system').map((m: any) => ({
             role: m.role,
