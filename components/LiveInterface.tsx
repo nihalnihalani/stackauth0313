@@ -11,8 +11,10 @@ interface LiveInterfaceProps {
 const LiveInterface: React.FC<LiveInterfaceProps> = ({ config, onClose, username }) => {
   const [status, setStatus] = useState<'connecting' | 'connected' | 'error' | 'disconnected'>('connecting');
   const [volume, setVolume] = useState(0);
+  const [elapsed, setElapsed] = useState(0);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const animationRef = useRef<number>(0);
+  const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
   
   // Audio Context Refs
   const audioContextRef = useRef<AudioContext | null>(null);
@@ -28,7 +30,11 @@ const LiveInterface: React.FC<LiveInterfaceProps> = ({ config, onClose, username
 
   useEffect(() => {
     startSession();
-    return () => stopSession();
+    timerRef.current = setInterval(() => setElapsed(prev => prev + 1), 1000);
+    return () => {
+      stopSession();
+      if (timerRef.current) clearInterval(timerRef.current);
+    };
   }, []);
 
   // Visualizer Loop
@@ -59,14 +65,14 @@ const LiveInterface: React.FC<LiveInterfaceProps> = ({ config, onClose, username
         ctx.lineTo(x, y);
       }
       
-      ctx.strokeStyle = status === 'connected' ? '#22d3ee' : '#555'; // Cyan or Gray
+      ctx.strokeStyle = status === 'connected' ? '#00F3FF' : '#555';
       ctx.lineWidth = 2;
       ctx.stroke();
 
       // Glow effect
       if (status === 'connected') {
           ctx.shadowBlur = 10;
-          ctx.shadowColor = '#22d3ee';
+          ctx.shadowColor = '#00F3FF';
           ctx.stroke();
           ctx.shadowBlur = 0;
       }
@@ -283,61 +289,90 @@ const LiveInterface: React.FC<LiveInterfaceProps> = ({ config, onClose, username
     }, 500);
   };
 
+  const formatTime = (s: number) => {
+    const m = Math.floor(s / 60).toString().padStart(2, '0');
+    const sec = (s % 60).toString().padStart(2, '0');
+    return `${m}:${sec}`;
+  };
+
+  const statusDot = status === 'connected'
+    ? 'bg-[var(--tertiary-container)] shadow-[0_0_8px_#36fd0f]'
+    : status === 'connecting'
+    ? 'bg-[var(--primary-container)] shadow-[0_0_8px_#00f3ff]'
+    : status === 'error'
+    ? 'bg-[var(--error)] shadow-[0_0_8px_#93000a]'
+    : 'bg-[var(--outline)]';
+
+  const statusLabel = status === 'connected'
+    ? { text: 'CONNECTED_SECURELY', color: 'text-[var(--tertiary)]' }
+    : status === 'connecting'
+    ? { text: 'ESTABLISHING_LINK', color: 'text-[var(--primary-container)]' }
+    : status === 'error'
+    ? { text: 'LINK_SEVERED', color: 'text-[var(--error)]' }
+    : { text: 'DISCONNECTED', color: 'text-[var(--outline)]' };
+
   return (
-    <div className="fixed inset-0 z-[70] flex items-center justify-center bg-black/95 backdrop-blur-xl animate-in fade-in duration-500">
-       <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-cyan-900/10 via-black to-black pointer-events-none"></div>
-       
-       <div className="relative w-full max-w-lg p-8 flex flex-col items-center gap-8">
-          <div className="text-center space-y-2">
-             <div className="inline-block border border-cyan-500/30 px-3 py-1 bg-cyan-950/20 rounded-full mb-4">
-                 <div className="flex items-center gap-2">
-                     <div className={`w-2 h-2 rounded-full ${status === 'connected' ? 'bg-cyan-400 animate-pulse' : 'bg-red-500'}`}></div>
-                     <span className="text-[10px] uppercase tracking-widest text-cyan-400 font-bold">Neural Voice Link</span>
-                 </div>
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-[var(--surface)]/90 backdrop-blur-[20px]">
+       <div className="relative w-full max-w-2xl bg-[var(--surface-container-lowest)] border border-[var(--primary-container)]/30 p-8 flex flex-col items-center gap-6" style={{ boxShadow: '0 0 40px rgba(0, 243, 255, 0.25)' }}>
+          {/* Corner Accents */}
+          <div className="absolute top-0 left-0 w-8 h-8 border-t-2 border-l-2 border-[var(--primary-container)]/20 pointer-events-none" />
+          <div className="absolute top-0 right-0 w-8 h-8 border-t-2 border-r-2 border-[var(--primary-container)]/40 pointer-events-none" />
+          <div className="absolute bottom-0 left-0 w-8 h-8 border-b-2 border-l-2 border-[var(--primary-container)]/40 pointer-events-none" />
+          <div className="absolute bottom-0 right-0 w-8 h-8 border-b-2 border-r-2 border-[var(--primary-container)]/20 pointer-events-none" />
+
+          {/* Header: Title + Status */}
+          <div className="text-center space-y-3">
+             <h2 className="font-['Space_Grotesk'] text-2xl font-bold text-[var(--primary)] tracking-tight">VOICE_LINK</h2>
+             <div className="flex items-center justify-center gap-2">
+                <div className={`w-2 h-2 rounded-full animate-pulse ${statusDot}`} />
+                <span className={`font-['Space_Grotesk'] text-[0.6875rem] font-bold tracking-[0.3em] uppercase ${statusLabel.color}`}>
+                  {statusLabel.text}
+                </span>
              </div>
-             <h2 className="text-3xl font-bold text-white tracking-wider">LIVE_SYNC</h2>
-             <p className="text-xs text-white/40 uppercase tracking-widest">
-                {status === 'connecting' ? 'Establishing Handshake...' : 
-                 status === 'connected' ? 'Channel Open // Speaking Allowed' : 
-                 status === 'error' ? 'Connection Interrupt' : 'Disconnected'}
-             </p>
           </div>
 
-          {/* Visualizer Canvas */}
-          <div className="w-full h-32 bg-black/50 border-y border-white/10 relative overflow-hidden">
-             <canvas 
-                ref={canvasRef} 
-                width={500} 
-                height={128} 
+          {/* Waveform Canvas */}
+          <div className="w-full h-80 border border-[var(--outline-variant)]/20 relative overflow-hidden">
+             <canvas
+                ref={canvasRef}
+                width={500}
+                height={320}
                 className="w-full h-full"
              />
-             <div className="absolute inset-0 bg-gradient-to-r from-black via-transparent to-black pointer-events-none"></div>
+             {/* Scanline overlay */}
+             <div className="absolute inset-0 pointer-events-none" style={{
+               background: 'linear-gradient(to bottom, transparent 50%, rgba(0, 243, 255, 0.03) 50%)',
+               backgroundSize: '100% 4px'
+             }} />
           </div>
 
-          <div className="flex gap-4">
+          {/* Timer */}
+          <div className="font-mono text-[2rem] text-[var(--primary-container)] tracking-wider">
+            {formatTime(elapsed)}
+          </div>
+
+          {/* Control Buttons */}
+          <div className="w-full bg-[var(--surface-container)] border border-[var(--outline-variant)]/20 p-4 flex gap-4 justify-center items-center">
              {(status === 'error' || status === 'disconnected') && (
-                 <button 
+                 <button
                    onClick={handleReconnect}
-                   className="w-16 h-16 rounded-full border border-cyan-500/50 text-cyan-400 hover:bg-cyan-950/30 transition-all flex items-center justify-center group"
+                   className="px-6 py-3 bg-transparent border border-[var(--primary-container)]/30 text-[var(--primary-container)] font-['Space_Grotesk'] font-semibold text-[0.6875rem] tracking-[0.15em] uppercase hover:bg-[var(--primary-container)]/10 hover:border-[var(--primary-container)]/60 transition-all flex items-center gap-2"
                    title="Reconnect"
                  >
-                    <i className="fa-solid fa-rotate-right text-xl group-hover:rotate-180 transition-transform duration-500"></i>
+                    <span className="material-symbols-outlined text-base" style={{ fontVariationSettings: "'FILL' 0" }}>refresh</span>
+                    RECONNECT
                  </button>
              )}
-             
-             <button 
+
+             <button
                onClick={onClose}
-               className="w-16 h-16 rounded-full border border-red-500/50 text-red-500 hover:bg-red-950/30 transition-all flex items-center justify-center group"
+               className="px-8 py-3 bg-[var(--error-container)] text-white font-['Space_Grotesk'] font-black text-[0.75rem] tracking-[0.2em] uppercase hover:brightness-125 transition-all flex items-center gap-3"
+               style={{ clipPath: 'polygon(0% 0%, 95% 0%, 100% 25%, 100% 100%, 5% 100%, 0% 75%)' }}
                title="End Session"
              >
-                <i className="fa-solid fa-phone-slash text-xl group-hover:scale-110 transition-transform"></i>
+                <span className="material-symbols-outlined text-base" style={{ fontVariationSettings: "'FILL' 1" }}>call_end</span>
+                END_SESSION
              </button>
-          </div>
-          
-          <div className="text-[9px] text-white/20 text-center max-w-xs leading-relaxed">
-             Latency: Low // Protocol: WebRTC // Encryption: Local-Only
-             <br/>
-             Speak clearly. The Hive is listening.
           </div>
        </div>
     </div>
