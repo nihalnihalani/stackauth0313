@@ -104,7 +104,7 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({ username, displayName, on
   const toggleModel = () => {
     setConfig(prev => ({
       ...prev,
-      model: prev.model === MODELS.GEMINI_3 ? MODELS.GEMINI_2_5 : MODELS.GEMINI_3
+      model: prev.model === MODELS.GEMINI_3_1_PRO ? MODELS.GEMINI_2_5_FLASH : MODELS.GEMINI_3_1_PRO
     }));
   };
 
@@ -365,13 +365,13 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({ username, displayName, on
             <button
               onClick={toggleModel}
               className={`clipped-tab label-sm px-4 py-1.5 transition-all ${
-                config.model === MODELS.GEMINI_3
+                config.model === MODELS.GEMINI_3_1_PRO
                   ? 'bg-[var(--primary-container)] text-[var(--on-primary)]'
                   : 'bg-[var(--surface-container)] text-[var(--on-surface-variant)] hover:brightness-110'
               }`}
               title="Switch Model Core"
             >
-              {config.model === MODELS.GEMINI_3 ? 'G-3.0 PRO' : 'G-2.5 FLASH'}
+              {config.model === MODELS.GEMINI_3_1_PRO ? 'G-3.0 PRO' : 'G-2.5 FLASH'}
             </button>
 
             {/* New Session */}

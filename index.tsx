@@ -5,6 +5,7 @@ import { StackProvider, StackTheme } from '@stackframe/stack';
 import { stackClientApp } from './stack';
 import App from './App';
 import { initDB } from './services/dbService';
+import './nexus-design.css';
 
 const rootElement = document.getElementById('root');
 if (!rootElement) {
