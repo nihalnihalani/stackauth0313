@@ -27,9 +27,15 @@ const queryClient = new QueryClient({
 
 function LoadingScreen() {
   return (
-    <div className="min-h-screen w-full bg-black text-white font-mono flex items-center justify-center">
-      <div className="text-xs tracking-[0.3em] uppercase text-white/40 animate-pulse">
-        Initializing Neural Link...
+    <div className="min-h-screen w-full flex items-center justify-center relative overflow-hidden" style={{ backgroundColor: 'var(--surface, #131313)' }}>
+      <div className="absolute inset-0 scanline pointer-events-none opacity-20" />
+      <div className="flex flex-col items-center gap-4 z-10">
+        <div className="font-headline text-2xl font-black tracking-tighter" style={{ color: 'var(--primary-container, #00F3FF)', textShadow: '0 0 15px rgba(0,243,255,0.4)' }}>
+          NEXUS
+        </div>
+        <div className="font-headline text-[0.6875rem] tracking-[0.3em] uppercase animate-pulse" style={{ color: 'var(--on-surface-variant, #b9cacb)' }}>
+          Initializing Secure Protocol...
+        </div>
       </div>
     </div>
   );
@@ -42,14 +48,14 @@ root.render(
       <StackProvider app={stackClientApp}>
         <StackTheme theme={{
           dark: {
-            background: '#000000',
-            foreground: '#ffffff',
-            primary: '#06b6d4',
-            primaryForeground: '#000000',
-            card: '#111111',
-            cardForeground: '#ffffff',
+            background: '#131313',
+            foreground: '#e5e2e1',
+            primary: '#00F3FF',
+            primaryForeground: '#00373a',
+            card: '#201f1f',
+            cardForeground: '#e5e2e1',
           },
-          radius: '2px',
+          radius: '0px',
         }}>
           <QueryClientProvider client={queryClient}>
             <App />
