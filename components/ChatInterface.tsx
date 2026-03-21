@@ -1,7 +1,5 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { UserButton } from '@stackframe/stack';
-import { stackClientApp } from '../stack';
 import { DEFAULT_CONFIG, MODES, MODELS } from '../constants';
 import { Message, AppConfig, Attachment } from '../types';
 import { streamResponse, generateTitle } from '../services/llmService';
@@ -25,14 +23,9 @@ interface ChatInterfaceProps {
 const ChatInterface: React.FC<ChatInterfaceProps> = ({ username, displayName, onLogout }) => {
   const queryClient = useQueryClient();
 
-  // Token getter for authenticated API calls
+  // Token getter (no auth, returns null)
   const getToken = useCallback(async (): Promise<string | null> => {
-    try {
-      const auth = await stackClientApp.getAuthJson();
-      return auth?.accessToken ?? null;
-    } catch {
-      return null;
-    }
+    return null;
   }, []);
 
   const [input, setInput] = useState('');
@@ -443,9 +436,13 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({ username, displayName, on
             <i className="fa-solid fa-gear"></i>
           </button>
 
-          <div className="ml-1">
-            <UserButton />
-          </div>
+          <button
+            onClick={onLogout}
+            className="label-sm px-2 py-1.5 bg-[var(--surface-container)] border border-[var(--outline-variant)]/20 text-[var(--on-surface-variant)] hover:text-[var(--error)] hover:brightness-110 transition-all"
+            title="Disconnect"
+          >
+            <i className="fa-solid fa-right-from-bracket"></i>
+          </button>
         </div>
       </header>
 

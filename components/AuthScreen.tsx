@@ -1,5 +1,4 @@
 import React from 'react';
-import { SignIn } from '@stackframe/stack';
 
 const AuthScreen: React.FC = () => {
   return (
@@ -36,9 +35,9 @@ const AuthScreen: React.FC = () => {
             </div>
           </div>
 
-          {/* Stack Auth SignIn component */}
-          <div className="[&_button]:rounded-none [&_input]:rounded-none">
-            <SignIn />
+          {/* Auth placeholder */}
+          <div className="text-center text-[var(--on-surface-variant)] label-sm py-8">
+            AUTH_MODULE_DISABLED
           </div>
         </section>
 
