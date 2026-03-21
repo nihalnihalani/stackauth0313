@@ -1,24 +1,31 @@
 
 
 export const MODELS = {
-  // Gemini 3.1 series (current flagship)
+  // === Gemini 3 series (current flagship, Feb-Mar 2026) ===
   GEMINI_3_1_PRO: 'gemini-3.1-pro-preview',
   GEMINI_3_FLASH: 'gemini-3-flash-preview',
   GEMINI_3_1_FLASH_LITE: 'gemini-3.1-flash-lite-preview',
-  // Aliases by capability tier
+
+  // === Gemini 2.5 series (stable, 2025) ===
+  GEMINI_2_5_PRO: 'gemini-2.5-pro',                           // Most advanced reasoning (stable Jun 2025)
+  GEMINI_2_5_FLASH: 'gemini-2.5-flash',                       // Best price-performance, adaptive thinking (stable Jun 2025)
+  GEMINI_2_5_FLASH_LITE: 'gemini-2.5-flash-lite',             // Budget option (stable Jul 2025)
+  GEMINI_2_5_FLASH_PREVIEW: 'gemini-2.5-flash-preview-09-2025', // Latest preview (Sep 2025)
+
+  // === Aliases by capability tier ===
   THINKING: 'gemini-3.1-pro-preview',       // Complex reasoning (best quality)
   FAST: 'gemini-3-flash-preview',            // Fast tasks (balanced speed/quality)
   LITE: 'gemini-3.1-flash-lite-preview',     // Ultra fast (cheapest)
-  // Gemini 2.5 series (advanced reasoning)
-  GEMINI_2_5_PRO: 'gemini-2.5-pro',
-  GEMINI_2_5_FLASH: 'gemini-2.5-flash',
-  GEMINI_2_5_FLASH_LITE: 'gemini-2.5-flash-lite',
-  // Image Generation
-  IMAGE_GEN: 'gemini-3.1-flash-image-preview',
-  IMAGE_GEN_PRO: 'gemini-3-pro-image-preview',
-  // Live Audio (updated to latest preview)
-  LIVE_AUDIO: 'gemini-2.5-flash-native-audio-preview-12-2025',
-  // Text-to-Speech
+
+  // === Image Generation ===
+  IMAGE_GEN: 'gemini-3.1-flash-image-preview',   // Fast image gen (Feb 2026)
+  IMAGE_GEN_PRO: 'gemini-3-pro-image-preview',    // High-quality image gen
+  IMAGE_EDIT: 'gemini-2.5-flash-image',            // Image editing (stable)
+
+  // === Live Audio ===
+  LIVE_AUDIO: 'gemini-2.5-flash-native-audio-preview-12-2025', // Real-time voice (Dec 2025)
+
+  // === Text-to-Speech ===
   TTS: 'gemini-2.5-flash-preview-tts',
   TTS_PRO: 'gemini-2.5-pro-preview-tts',
 };
