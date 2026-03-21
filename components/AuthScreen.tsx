@@ -12,7 +12,7 @@ const AuthScreen: React.FC = () => {
       <main className="relative z-20 w-full max-w-md px-6">
         {/* Header Branding */}
         <header className="mb-12 text-center">
-          <h1 className="font-headline font-black text-[3.5rem] tracking-tighter text-[var(--primary-container)] drop-shadow-[0_0_15px_rgba(0,243,255,0.4)]">
+          <h1 className="font-headline font-black text-[3.5rem] tracking-tighter text-[var(--primary-container)] drop-shadow-[0_0_40px_rgba(0,243,255,0.3)]">
             NEXUS
           </h1>
           <p className="label-sm text-[var(--on-surface-variant)] mt-2 border-t border-[var(--outline-variant)]/30 pt-2 inline-block">
@@ -43,14 +43,20 @@ const AuthScreen: React.FC = () => {
         </section>
 
         {/* Protocol Footer Bar */}
-        <div className="mt-6 flex items-center justify-between px-2">
-          <div className="flex items-center gap-2">
-            <span className="w-1.5 h-1.5 bg-[var(--tertiary-container)] rounded-full animate-pulse"></span>
-            <span className="label-sm text-[0.6rem] text-[var(--on-surface)] tracking-[0.2em]">
-              SECURE_PROTOCOL: <span className="text-[var(--tertiary-container)]">ACTIVE</span>
-            </span>
+        <div className="mt-6 space-y-2 px-2">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <span className="w-1.5 h-1.5 bg-[var(--tertiary-container)] rounded-full animate-pulse"></span>
+              <span className="label-sm text-[0.6rem] text-[var(--on-surface)] tracking-[0.2em]">
+                SECURE_PROTOCOL: <span className="text-[var(--tertiary-container)]">ACTIVE</span>
+              </span>
+            </div>
+            <span className="nexus-badge-success">V3.1.0-BETA</span>
           </div>
-          <span className="nexus-badge-success">V3.1.0-BETA</span>
+          <div className="flex justify-between label-sm text-[0.5rem] text-[var(--outline)] tracking-widest">
+            <span>PORT: 3000</span>
+            <span>ENCRYPTION: AES-256</span>
+          </div>
         </div>
       </main>
     </div>
