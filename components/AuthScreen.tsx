@@ -3,28 +3,56 @@ import { SignIn } from '@stackframe/stack';
 
 const AuthScreen: React.FC = () => {
   return (
-    <div className="min-h-screen w-full bg-black text-white font-mono flex items-center justify-center relative overflow-hidden">
-      {/* Background Decor */}
-      <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.02)_1px,transparent_1px)] bg-[size:40px_40px]"></div>
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-white/5 blur-[100px] rounded-full pointer-events-none"></div>
+    <div className="min-h-screen w-full bg-[var(--surface)] text-[var(--on-surface)] font-body flex items-center justify-center relative overflow-hidden">
+      {/* Grid Overlay */}
+      <div className="absolute inset-0 grid-overlay pointer-events-none"></div>
+      {/* Ambient gradient */}
+      <div className="absolute inset-0 bg-gradient-to-tr from-[var(--surface-container-lowest)] via-[var(--surface-container-lowest)] to-[var(--primary-container)]/5 pointer-events-none"></div>
 
-      <div className="w-full max-w-md p-8 relative z-10">
-        <div className="mb-8 text-center">
-          <div className="inline-block border border-white/20 px-4 py-1 mb-6 bg-black">
-            <span className="text-[10px] tracking-[0.3em] uppercase text-white/60">System_Access_Port</span>
+      <main className="relative z-20 w-full max-w-md px-6">
+        {/* Header Branding */}
+        <header className="mb-12 text-center">
+          <h1 className="font-headline font-black text-[3.5rem] tracking-tighter text-[var(--primary-container)] drop-shadow-[0_0_15px_rgba(0,243,255,0.4)]">
+            NEXUS
+          </h1>
+          <p className="label-sm text-[var(--on-surface-variant)] mt-2 border-t border-[var(--outline-variant)]/30 pt-2 inline-block">
+            Collaborative Cognitive Architecture
+          </p>
+        </header>
+
+        {/* Login Container */}
+        <section className="bg-[var(--surface-container)] border border-[var(--primary-container)]/20 p-8 clipped-tr-bl shadow-[0px_10px_40px_rgba(0,243,255,0.05)] relative">
+          {/* Corner Accents */}
+          <div className="corner-accent-tr"></div>
+          <div className="corner-accent-bl"></div>
+
+          <div className="mb-6 flex items-center justify-between">
+            <h2 className="font-headline text-lg font-bold text-[var(--primary)] tracking-widest uppercase">
+              Access_Protocol
+            </h2>
+            <div className="flex items-center gap-2">
+              <span className="w-2 h-2 bg-[var(--tertiary-container)] animate-pulse"></span>
+              <span className="label-sm text-[0.6rem] text-[var(--tertiary-container)]">SYS_READY</span>
+            </div>
           </div>
-          <h1 className="text-4xl md:text-5xl font-bold tracking-[0.2em] mb-2">NEXUS</h1>
-          <p className="text-xs text-white/40 tracking-widest uppercase">Collaborative Cognitive Architecture</p>
-        </div>
 
-        {/* Stack Auth SignIn component - themed via StackTheme */}
-        <SignIn />
+          {/* Stack Auth SignIn component */}
+          <div className="[&_button]:rounded-none [&_input]:rounded-none">
+            <SignIn />
+          </div>
+        </section>
 
-        <div className="mt-8 flex justify-between text-[9px] text-white/20 uppercase tracking-widest select-none">
-          <span>Secure_Protocol: Active</span>
-          <span>Ver: 3.1.0</span>
+        {/* Protocol Footer Bar */}
+        <div className="mt-6 flex items-center justify-between px-2">
+          <div className="flex items-center gap-2">
+            <span className="w-1.5 h-1.5 bg-[var(--tertiary-container)] rounded-full animate-pulse"></span>
+            <span className="label-sm text-[0.6rem] text-[var(--on-surface)] tracking-[0.2em]">
+              SECURE_PROTOCOL: <span className="text-[var(--tertiary-container)]">ACTIVE</span>
+            </span>
+          </div>
+          <span className="nexus-badge-success">V3.1.0-BETA</span>
         </div>
-      </div>
+      </main>
     </div>
   );
 };
