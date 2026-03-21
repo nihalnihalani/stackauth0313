@@ -1,0 +1,418 @@
+/* ==========================================================================
+   NEXUS DESIGN SYSTEM - The Kinetic Protocol
+   Tactical Command Interface CSS Foundation
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   1. CSS CUSTOM PROPERTIES (Color Tokens)
+   -------------------------------------------------------------------------- */
+:root {
+  /* Primary */
+  --primary-container: #00F3FF;
+  --primary: #E3FDFF;
+  --primary-fixed: #6FF6FF;
+
+  /* Secondary */
+  --secondary: #FFABF3;
+  --secondary-container: #FE00FE;
+  --secondary-fixed: #FFD7F5;
+
+  /* Tertiary */
+  --tertiary: #E8FFDA;
+  --tertiary-container: #36FD0F;
+  --tertiary-fixed: #79FF5B;
+
+  /* Surfaces */
+  --surface: #131313;
+  --surface-container-lowest: #0e0e0e;
+  --surface-container-low: #1c1b1b;
+  --surface-container: #201f1f;
+  --surface-container-high: #2a2a2a;
+  --surface-container-highest: #353534;
+  --surface-bright: #3a3939;
+
+  /* On-Surface */
+  --on-surface: #e5e2e1;
+  --on-surface-variant: #b9cacb;
+
+  /* On-Primary */
+  --on-primary: #00373a;
+  --on-primary-container: #006b71;
+
+  /* On-Tertiary */
+  --on-tertiary: #053900;
+  --on-tertiary-container: #107000;
+
+  /* On-Error */
+  --on-error: #690005;
+
+  /* Outline */
+  --outline: #849495;
+  --outline-variant: #3a494b;
+
+  /* Error */
+  --error: #FFBAB1;
+  --error-container: #93000A;
+}
+
+
+/* --------------------------------------------------------------------------
+   2. CLIP-PATH GEOMETRY CLASSES
+   -------------------------------------------------------------------------- */
+
+/* Asymmetric container: top-right and bottom-left corners clipped */
+.clipped-tr-bl {
+  clip-path: polygon(0% 0%, 92% 0%, 100% 8%, 100% 100%, 8% 100%, 0% 92%);
+}
+
+/* CTA button: diagonal clips on opposing corners */
+.clipped-button {
+  clip-path: polygon(0% 0%, 95% 0%, 100% 25%, 100% 100%, 5% 100%, 0% 75%);
+}
+
+/* Header bar: subtle bottom-right clip */
+.clipped-header {
+  clip-path: polygon(0% 0%, 100% 0%, 100% 85%, 98.5% 100%, 0% 100%);
+}
+
+/* Tab / side element: bottom-left corner clip */
+.clipped-tab {
+  clip-path: polygon(0% 0%, 100% 0%, 100% 100%, 10% 100%, 0% 70%);
+}
+
+
+/* --------------------------------------------------------------------------
+   3. COMPONENT CLASSES
+   -------------------------------------------------------------------------- */
+
+/* -- Buttons -- */
+.nexus-btn-primary {
+  background-color: var(--primary-container);
+  color: var(--on-primary);
+  font-family: 'Space Grotesk', sans-serif;
+  font-weight: 700;
+  font-size: 0.75rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  padding: 0.75rem 1.5rem;
+  border: none;
+  cursor: pointer;
+  clip-path: polygon(0% 0%, 95% 0%, 100% 25%, 100% 100%, 5% 100%, 0% 75%);
+  box-shadow: 0 0 20px rgba(0, 243, 255, 0.2);
+  transition: filter 0.2s ease, transform 0.1s ease;
+}
+
+.nexus-btn-primary:hover {
+  filter: brightness(1.1);
+  box-shadow: 0 0 30px rgba(0, 243, 255, 0.35);
+}
+
+.nexus-btn-primary:active {
+  transform: scale(0.98);
+}
+
+.nexus-btn-secondary {
+  background-color: transparent;
+  color: var(--primary-container);
+  font-family: 'Space Grotesk', sans-serif;
+  font-weight: 600;
+  font-size: 0.6875rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  padding: 0.5rem 1rem;
+  border: 1px solid rgba(0, 243, 255, 0.3);
+  cursor: pointer;
+  transition: background-color 0.2s ease, border-color 0.2s ease;
+}
+
+.nexus-btn-secondary:hover {
+  background-color: rgba(0, 243, 255, 0.1);
+  border-color: rgba(0, 243, 255, 0.6);
+}
+
+/* -- Inputs -- */
+.nexus-input {
+  width: 100%;
+  background-color: var(--surface-container-lowest);
+  color: var(--primary);
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 0.875rem;
+  text-transform: uppercase;
+  padding: 0.75rem 0.75rem 0.75rem 2.5rem;
+  border: none;
+  border-bottom: 2px solid var(--outline-variant);
+  outline: none;
+  transition: border-color 0.3s ease;
+}
+
+.nexus-input::placeholder {
+  color: rgba(132, 148, 149, 0.4);
+}
+
+.nexus-input:focus {
+  border-bottom-color: var(--primary-container);
+}
+
+/* -- Modal -- */
+.nexus-modal {
+  background-color: var(--surface-container-lowest);
+  border: 1px solid rgba(0, 243, 255, 0.3);
+  box-shadow: 0px 0px 100px rgba(0, 243, 255, 0.1);
+  position: relative;
+  overflow: hidden;
+}
+
+.nexus-modal-header {
+  background-color: rgba(0, 243, 255, 0.1);
+  border-bottom: 1px solid rgba(0, 243, 255, 0.2);
+  padding: 0.75rem 1.5rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.nexus-modal-header span {
+  font-family: 'Space Grotesk', sans-serif;
+  font-weight: 900;
+  text-transform: uppercase;
+  font-size: 0.75rem;
+  letter-spacing: 0.15em;
+  color: var(--primary-container);
+}
+
+/* -- List Items -- */
+.nexus-list-item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem 1.5rem;
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 0.75rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--surface-bright);
+  cursor: pointer;
+  border-left: 4px solid transparent;
+  transition: all 0.2s ease;
+}
+
+.nexus-list-item:hover {
+  color: var(--primary-container);
+  background-color: var(--surface-container);
+  transform: translateX(4px);
+}
+
+.nexus-list-item.active {
+  color: var(--primary-container);
+  background-color: rgba(0, 243, 255, 0.1);
+  border-left-color: var(--primary-container);
+}
+
+/* -- Badges -- */
+.nexus-badge-success {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.125rem 0.5rem;
+  background-color: rgba(54, 253, 15, 0.1);
+  border: 1px solid rgba(54, 253, 15, 0.2);
+  color: var(--tertiary-container);
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 0.5rem;
+  font-weight: 900;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.nexus-badge-warning {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.125rem 0.5rem;
+  background-color: rgba(254, 0, 254, 0.1);
+  border: 1px solid rgba(255, 171, 243, 0.2);
+  color: var(--secondary);
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 0.5rem;
+  font-weight: 900;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+/* -- Code Block -- */
+.nexus-code-block {
+  background-color: var(--surface-container-high);
+  padding: 1rem;
+  border-left: 2px solid var(--primary-container);
+  font-family: monospace;
+  font-size: 0.8rem;
+  color: var(--primary);
+  overflow-x: auto;
+  white-space: pre;
+}
+
+/* -- Chat Messages -- */
+.nexus-message-user {
+  background-color: var(--surface-container);
+  border-right: 2px solid var(--primary-container);
+  padding: 1rem;
+}
+
+.nexus-message-ai {
+  font-family: monospace;
+  font-size: 0.875rem;
+  line-height: 1.625;
+  color: var(--primary);
+}
+
+/* -- Layout: Topbar -- */
+.nexus-topbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 50;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 1.5rem;
+  height: 4rem;
+  background-color: var(--surface-container-lowest);
+  border-bottom: 2px solid rgba(58, 73, 75, 0.2);
+  box-shadow: 0px 10px 40px rgba(0, 243, 255, 0.08);
+  clip-path: polygon(0% 0%, 100% 0%, 100% 85%, 98.5% 100%, 0% 100%);
+}
+
+/* -- Layout: Sidebar -- */
+.nexus-sidebar {
+  position: fixed;
+  left: 0;
+  top: 4rem;
+  height: calc(100vh - 4rem);
+  width: 16rem;
+  display: flex;
+  flex-direction: column;
+  z-index: 40;
+  background-color: var(--surface-container-lowest);
+  border-right: 1px solid rgba(58, 73, 75, 0.2);
+}
+
+
+/* --------------------------------------------------------------------------
+   4. EFFECTS & OVERLAYS
+   -------------------------------------------------------------------------- */
+
+/* Scanline overlay: 1px horizontal lines for terminal CRT feel */
+.scanline {
+  background: linear-gradient(
+    to bottom,
+    transparent 50%,
+    rgba(0, 243, 255, 0.03) 50%
+  );
+  background-size: 100% 4px;
+  pointer-events: none;
+}
+
+/* Grid overlay: tactical HUD grid */
+.grid-overlay {
+  background-size: 40px 40px;
+  background-image:
+    linear-gradient(to right, rgba(58, 73, 75, 0.1) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(58, 73, 75, 0.1) 1px, transparent 1px);
+  pointer-events: none;
+}
+
+/* Corner accent decorations */
+.corner-accent-tr {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 2rem;
+  height: 2rem;
+  border-top: 2px solid rgba(0, 243, 255, 0.4);
+  border-right: 2px solid rgba(0, 243, 255, 0.4);
+  pointer-events: none;
+}
+
+.corner-accent-bl {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 2rem;
+  height: 2rem;
+  border-bottom: 2px solid rgba(0, 243, 255, 0.4);
+  border-left: 2px solid rgba(0, 243, 255, 0.4);
+  pointer-events: none;
+}
+
+.corner-accent-tl {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 2rem;
+  height: 2rem;
+  border-top: 2px solid rgba(0, 243, 255, 0.2);
+  border-left: 2px solid rgba(0, 243, 255, 0.2);
+  pointer-events: none;
+}
+
+.corner-accent-br {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 2rem;
+  height: 2rem;
+  border-bottom: 2px solid rgba(0, 243, 255, 0.2);
+  border-right: 2px solid rgba(0, 243, 255, 0.2);
+  pointer-events: none;
+}
+
+/* Cyan glow effects */
+.glow-cyan {
+  box-shadow: 0 0 20px rgba(0, 243, 255, 0.1);
+}
+
+.glow-cyan-strong {
+  box-shadow: 0 0 40px rgba(0, 243, 255, 0.25);
+}
+
+
+/* --------------------------------------------------------------------------
+   5. ANIMATIONS
+   -------------------------------------------------------------------------- */
+
+@keyframes pulse-glow {
+  0%, 100% {
+    box-shadow: 0 0 8px rgba(0, 243, 255, 0.3);
+    opacity: 1;
+  }
+  50% {
+    box-shadow: 0 0 20px rgba(0, 243, 255, 0.6);
+    opacity: 0.8;
+  }
+}
+
+.animate-pulse-glow {
+  animation: pulse-glow 2s ease-in-out infinite;
+}
+
+
+/* --------------------------------------------------------------------------
+   6. TYPOGRAPHY
+   -------------------------------------------------------------------------- */
+
+.font-headline {
+  font-family: 'Space Grotesk', sans-serif;
+}
+
+.font-body {
+  font-family: 'Inter', sans-serif;
+}
+
+.label-sm {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 0.6875rem;
+  font-weight: 700;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+}
