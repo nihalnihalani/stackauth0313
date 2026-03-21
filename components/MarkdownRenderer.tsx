@@ -26,19 +26,13 @@ const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({ content, onSvgClick
             const svgContent = String(children);
             return (
               <div
-                className="my-6 border border-white/20 bg-black/50 p-2 rounded-sm relative overflow-hidden group cursor-pointer hover:border-white/60 transition-colors"
+                className="my-6 border border-[var(--outline-variant)]/20 bg-[var(--surface-container-lowest)]/50 p-2 rounded-none relative overflow-hidden group cursor-pointer hover:border-[var(--primary-container)]/60 transition-colors"
                 onClick={() => onSvgClick(svgContent)}
                 title="Click to expand schematic"
               >
-                <div className="absolute top-0 right-0 p-1 text-[8px] text-white/40 border-b border-l border-white/10 uppercase tracking-widest bg-white/5 group-hover:text-white group-hover:bg-white/10 transition-colors z-10">
-                  Schematic_Render [EXPAND]
+                <div className="absolute top-0 right-0 p-1 label-sm text-[var(--primary-container)] border-b border-l border-[var(--outline-variant)]/20 bg-[var(--surface-container)]/50 group-hover:bg-[var(--primary-container)]/10 transition-colors z-10">
+                  [EXPAND]
                 </div>
-                {/* 
-                   Force SVG to be responsive. 
-                   w-full: takes full width of container.
-                   h-auto: maintains aspect ratio.
-                   max-h: prevents it from being excessively tall on mobile.
-                */}
                 <div
                   className="w-full flex justify-center items-center [&>svg]:w-full [&>svg]:h-auto [&>svg]:max-h-[600px] [&>svg]:block"
                   dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(svgContent, {
@@ -56,28 +50,28 @@ const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({ content, onSvgClick
             return <CodeBlock className={className} {...props}>{children}</CodeBlock>;
           }
 
-          return <code className="bg-white/10 px-1 rounded break-all" {...props}>{children}</code>;
+          return <code className="bg-[var(--surface-container-high)] px-1 rounded-none break-all" {...props}>{children}</code>;
         },
         pre: ({ node, children }) => <>{children}</>,
         table: ({ node, children }) => (
-          <div className="overflow-x-auto my-6 border border-white/10 rounded-sm">
+          <div className="overflow-x-auto my-6 border border-[var(--outline-variant)]/20 rounded-none">
             <table className="w-full text-left border-collapse text-sm">{children}</table>
           </div>
         ),
         thead: ({ node, children }) => (
-          <thead className="bg-white/10 text-white uppercase tracking-wider font-bold">{children}</thead>
+          <thead className="bg-[var(--surface-container)] text-[var(--primary-container)] uppercase tracking-wider font-bold">{children}</thead>
         ),
         tbody: ({ node, children }) => (
-          <tbody className="divide-y divide-white/10">{children}</tbody>
+          <tbody className="divide-y divide-[var(--outline-variant)]/20">{children}</tbody>
         ),
         tr: ({ node, children }) => (
-          <tr className="hover:bg-white/5 transition-colors">{children}</tr>
+          <tr className="hover:bg-[var(--surface-container)]/50 transition-colors">{children}</tr>
         ),
         th: ({ node, children }) => (
-          <th className="px-4 py-3 border-b border-white/20 whitespace-nowrap">{children}</th>
+          <th className="px-4 py-3 border-b border-[var(--outline-variant)]/30 whitespace-nowrap label-sm">{children}</th>
         ),
         td: ({ node, children }) => (
-          <td className="px-4 py-3 border-r border-white/5 last:border-r-0">{children}</td>
+          <td className="px-4 py-3 border-r border-[var(--outline-variant)]/10 last:border-r-0">{children}</td>
         ),
       }}
     >

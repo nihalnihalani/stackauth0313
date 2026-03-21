@@ -14,15 +14,15 @@ interface InputAreaProps {
   hasHistory?: boolean;
 }
 
-const InputArea: React.FC<InputAreaProps> = ({ 
-    input, 
-    setInput, 
-    handleSend, 
-    isLoading, 
-    mode, 
-    onStop, 
+const InputArea: React.FC<InputAreaProps> = ({
+    input,
+    setInput,
+    handleSend,
+    isLoading,
+    mode,
+    onStop,
     onRegenerate,
-    hasHistory 
+    hasHistory
 }) => {
   const [isCompare, setIsCompare] = useState(false);
   const [attachments, setAttachments] = useState<Attachment[]>([]);
@@ -46,7 +46,7 @@ const InputArea: React.FC<InputAreaProps> = ({
                 reader.onloadend = () => {
                     const res = reader.result as string;
                     // remove data:mime/type;base64, prefix
-                    resolve(res.split(',')[1]); 
+                    resolve(res.split(',')[1]);
                 };
                 reader.readAsDataURL(file);
             });
@@ -72,26 +72,26 @@ const InputArea: React.FC<InputAreaProps> = ({
   };
 
   return (
-    <div className="fixed bottom-0 left-0 w-full bg-black/90 backdrop-blur-sm border-t border-white/10 z-10">
-      
+    <div className="fixed bottom-0 left-0 w-full bg-[var(--surface-container-lowest)] border-t-2 border-[var(--outline-variant)]/20 z-10">
+
       {/* Attachment Preview Bar */}
       {attachments.length > 0 && (
-          <div className="w-full px-4 py-2 bg-white/5 border-b border-white/10 flex gap-4 overflow-x-auto no-scrollbar">
+          <div className="w-full px-4 py-2 bg-[var(--surface-container)] border-b border-[var(--outline-variant)]/20 flex gap-4 overflow-x-auto no-scrollbar">
               {attachments.map((att, i) => (
                   <div key={i} className="relative group flex-shrink-0 animate-in fade-in slide-in-bottom duration-300">
                       {att.type === 'image' ? (
-                          <div className="h-16 w-16 rounded border border-white/20 overflow-hidden bg-black">
+                          <div className="h-16 w-16 rounded-none border border-[var(--outline-variant)]/20 overflow-hidden bg-[var(--surface-container)]">
                              <img src={`data:${att.mimeType};base64,${att.data}`} alt="preview" className="h-full w-full object-cover opacity-70 group-hover:opacity-100 transition-opacity" />
                           </div>
                       ) : (
-                          <div className="h-16 w-16 rounded border border-white/20 bg-white/10 flex flex-col items-center justify-center text-white/50 group-hover:text-white transition-colors">
+                          <div className="h-16 w-16 rounded-none border border-[var(--outline-variant)]/20 bg-[var(--surface-container)] flex flex-col items-center justify-center text-[var(--on-surface-variant)] group-hover:text-[var(--primary-container)] transition-colors">
                               <i className="fa-solid fa-file-pdf text-xl mb-1"></i>
                               <span className="text-[8px] uppercase tracking-widest max-w-full truncate px-1">{att.mimeType.split('/')[1]}</span>
                           </div>
                       )}
-                      <button 
+                      <button
                         onClick={() => removeAttachment(i)}
-                        className="absolute -top-2 -right-2 bg-red-900/80 hover:bg-red-600 text-white rounded-full w-5 h-5 flex items-center justify-center text-[10px] border border-white/20 transition-colors"
+                        className="absolute -top-2 -right-2 bg-[var(--error-container)] hover:bg-[var(--error)] text-[var(--on-error)] rounded-none w-5 h-5 flex items-center justify-center text-[10px] border border-[var(--outline-variant)]/20 transition-colors"
                       >
                           <i className="fa-solid fa-times"></i>
                       </button>
@@ -100,78 +100,100 @@ const InputArea: React.FC<InputAreaProps> = ({
           </div>
       )}
 
-      <div className="w-[95%] md:w-[90%] mx-auto flex items-center gap-3 py-3 md:py-5">
-        {/* Prompt symbol aligned with flex center */}
-        <span className={`text-lg animate-pulse hidden md:block font-bold opacity-80 leading-none select-none pb-0.5 h-10 flex items-center ${mode === MODES.SOCRATIC ? 'text-amber-500' : 'text-white'}`}>
-          {mode === MODES.SOCRATIC ? '?' : '>'}
-        </span>
-        
-        <form onSubmit={onSubmit} className="flex-1">
-          <input
-            type="text"
-            value={input}
-            onChange={(e) => setInput(e.target.value)}
-            placeholder={mode === MODES.SOCRATIC ? "Enter response..." : "Initiate command..."}
-            className="w-full h-10 bg-transparent border-b border-white/20 focus:border-white outline-none text-white font-mono text-sm transition-all placeholder:text-white/20 px-2"
-            autoFocus
-          />
-        </form>
+      <div className="max-w-5xl mx-auto px-4 md:px-6 py-3 md:py-4">
+        <div className="relative bg-[var(--surface-container-lowest)] border-b-2 border-[var(--outline-variant)] flex items-end focus-within:border-[var(--primary-container)] transition-colors">
+          {/* Mode indicator */}
+          <div className="p-4 font-headline text-lg font-bold text-[var(--primary-container)] select-none">
+            {mode === MODES.SOCRATIC ? '?' : '>'}
+          </div>
 
-        {isLoading ? (
+          <form onSubmit={onSubmit} className="flex-1">
+            <input
+              type="text"
+              value={input}
+              onChange={(e) => setInput(e.target.value)}
+              placeholder={mode === MODES.SOCRATIC ? "ENTER RESPONSE..." : "ENTER SECURE COMMAND OR QUERY..."}
+              className="nexus-input w-full h-10 bg-transparent border-none focus:ring-0 outline-none text-[var(--primary)] font-mono text-sm px-2 placeholder:text-[var(--outline)]/40 uppercase"
+              style={{ borderBottom: 'none', paddingLeft: '0.5rem' }}
+              autoFocus
+            />
+          </form>
+
+          <div className="p-2 flex items-center gap-2">
+            {/* Attach */}
             <button
-              onClick={onStop}
-              className="h-10 bg-red-900/50 text-white border border-red-500/50 hover:bg-red-600 transition-all uppercase text-[10px] tracking-widest px-6 font-bold flex items-center justify-center whitespace-nowrap animate-pulse"
+                onClick={() => fileInputRef.current?.click()}
+                className="h-10 w-10 flex items-center justify-center bg-[var(--surface-container)] border border-[var(--outline-variant)]/20 text-[var(--on-surface-variant)] hover:brightness-110 hover:text-[var(--primary-container)] transition-all rounded-none"
+                title="Attach PDF or Image"
             >
-              STOP
+                <i className="fa-solid fa-paperclip"></i>
             </button>
-        ) : (
+            <input
+                type="file"
+                multiple
+                ref={fileInputRef}
+                onChange={handleFileChange}
+                className="hidden"
+                accept="image/*,application/pdf"
+            />
+
+            {/* Regenerate */}
+            {!isLoading && hasHistory && !input.trim() && (
+                <button
+                    onClick={() => onRegenerate?.(isCompare)}
+                    className="h-10 w-10 flex items-center justify-center bg-[var(--surface-container)] border border-[var(--outline-variant)]/20 text-[var(--on-surface-variant)] hover:brightness-110 hover:text-[var(--primary-container)] transition-all rounded-none"
+                    title="Regenerate Last Response"
+                >
+                    <i className="fa-solid fa-rotate-right"></i>
+                </button>
+            )}
+
+            {/* Execute / Stop */}
+            {isLoading ? (
+                <button
+                  onClick={onStop}
+                  className="h-10 px-6 bg-[var(--error-container)] text-[var(--error)] clipped-button label-sm hover:brightness-110 transition-all flex items-center justify-center whitespace-nowrap animate-pulse"
+                >
+                  STOP
+                </button>
+            ) : (
+                <button
+                  onClick={() => onSubmit()}
+                  disabled={(!input.trim() && attachments.length === 0)}
+                  className="nexus-btn-primary clipped-button h-10 px-6 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center whitespace-nowrap"
+                >
+                  EXECUTE
+                </button>
+            )}
+          </div>
+        </div>
+
+        {/* Bottom controls row */}
+        <div className="flex items-center justify-between mt-2 px-1">
+          <div className="flex items-center gap-3">
+            <div className="flex items-center gap-2">
+              <span className={`w-2 h-2 rounded-full ${mode === MODES.SOCRATIC ? 'bg-[var(--secondary)]' : 'bg-[var(--tertiary-container)]'} shadow-[0_0_8px_${mode === MODES.SOCRATIC ? 'var(--secondary)' : 'var(--tertiary-container)'}]`}></span>
+              <span className="label-sm text-[var(--on-surface-variant)]">
+                {mode === MODES.SOCRATIC ? 'SOCRATIC_PROTOCOL' : 'DIRECT_MODE'}
+              </span>
+            </div>
+          </div>
+
+          <div className="flex items-center gap-3">
+            {/* Compare Toggle */}
             <button
-              onClick={() => onSubmit()}
-              disabled={(!input.trim() && attachments.length === 0)}
-              className="h-10 bg-black text-white border border-white hover:invert disabled:opacity-50 disabled:hover:invert-0 transition-all uppercase text-[10px] tracking-widest px-6 font-bold flex items-center justify-center whitespace-nowrap"
+              onClick={() => setIsCompare(!isCompare)}
+              className={`h-8 border transition-all label-sm px-3 flex items-center justify-center gap-2 rounded-none
+                ${isCompare
+                  ? 'bg-[var(--primary-container)] text-[var(--on-primary)] border-[var(--primary-container)] glow-cyan'
+                  : 'bg-[var(--surface-container)] text-[var(--on-surface-variant)] border-[var(--outline-variant)]/20 hover:brightness-110'}`}
+              title="Compare Mode (Generate two responses)"
             >
-              EXECUTE
+              <i className="fa-solid fa-code-compare text-xs"></i>
+              <span className="hidden md:inline">COMPARE</span>
             </button>
-        )}
-
-        {!isLoading && hasHistory && !input.trim() && (
-            <button
-                onClick={() => onRegenerate?.(isCompare)}
-                className="h-10 w-10 flex items-center justify-center border border-white/20 text-white/50 hover:text-white hover:border-white hover:bg-white/10 transition-all rounded-sm"
-                title="Regenerate Last Response"
-            >
-                <i className="fa-solid fa-rotate-right"></i>
-            </button>
-        )}
-
-        <button
-            onClick={() => fileInputRef.current?.click()}
-            className="h-10 w-10 flex items-center justify-center border border-white/20 text-white/50 hover:text-white hover:border-white hover:bg-white/10 transition-all rounded-sm"
-            title="Attach PDF or Image"
-        >
-            <i className="fa-solid fa-paperclip"></i>
-        </button>
-        <input 
-            type="file"
-            multiple
-            ref={fileInputRef}
-            onChange={handleFileChange}
-            className="hidden"
-            accept="image/*,application/pdf"
-        />
-        
-        <button
-          onClick={() => setIsCompare(!isCompare)}
-          className={`h-10 border transition-all uppercase text-[10px] tracking-widest px-3 font-bold flex items-center justify-center gap-2
-            ${isCompare 
-              ? 'bg-cyan-900/50 text-cyan-400 border-cyan-400 shadow-[0_0_10px_rgba(34,211,238,0.2)]' 
-              : 'bg-black text-white/40 border-white/20 hover:text-white hover:border-white'}`}
-          title="Compare Mode (Generate two responses)"
-        >
-          <i className="fa-solid fa-code-compare text-xs"></i>
-          <span className="hidden md:inline">COMPARE</span>
-        </button>
-
+          </div>
+        </div>
       </div>
     </div>
   );

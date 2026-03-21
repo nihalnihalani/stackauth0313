@@ -13,22 +13,22 @@ const CodeBlock = ({ className, children, ...props }: any) => {
   return (
     <div className="relative w-full my-6 group">
       <div className="absolute -top-3 right-0 flex items-center gap-2 z-10">
-        <div className="bg-black border border-white/20 px-2 py-0.5 text-[10px] text-white/40 uppercase tracking-widest hidden md:block">
+        <div className="label-sm bg-[var(--surface-container-high)] border border-[var(--outline-variant)]/20 px-2 py-0.5 text-[var(--on-surface-variant)] hidden md:block">
            {className?.replace('language-', '') || 'TEXT'}
         </div>
         <button
           onClick={handleCopy}
-          className="bg-black border border-white/20 hover:border-white hover:text-black hover:bg-white text-white/60 px-3 py-0.5 text-[10px] uppercase tracking-widest transition-all flex items-center gap-2"
+          className="label-sm bg-[var(--surface-container-high)] border border-[var(--outline-variant)]/20 hover:border-[var(--primary-container)]/40 hover:text-[var(--primary-container)] text-[var(--on-surface-variant)] px-3 py-0.5 transition-all flex items-center gap-2"
           title="Copy to clipboard"
         >
           {copied ? (
-             <><i className="fa-solid fa-check text-emerald-500"></i> COPIED</>
+             <><i className="fa-solid fa-check text-[var(--tertiary-container)]"></i> <span className="text-[var(--tertiary-container)]">COPIED</span></>
           ) : (
              <><i className="fa-regular fa-copy"></i> COPY</>
           )}
         </button>
       </div>
-      <div className="w-full overflow-x-auto border border-white/10 bg-white/5 p-4 pt-6 md:pt-4 no-scrollbar">
+      <div className="nexus-code-block w-full overflow-x-auto pt-6 md:pt-4 no-scrollbar rounded-none">
         <code className={`${className} font-mono text-sm whitespace-pre`} {...props}>
           {children}
         </code>
