@@ -172,7 +172,7 @@ const InputArea: React.FC<InputAreaProps> = ({
         <div className="flex items-center justify-between mt-2 px-1">
           <div className="flex items-center gap-3">
             <div className="flex items-center gap-2">
-              <span className={`w-2 h-2 rounded-full ${mode === MODES.SOCRATIC ? 'bg-[var(--secondary)]' : 'bg-[var(--tertiary-container)]'} shadow-[0_0_8px_${mode === MODES.SOCRATIC ? 'var(--secondary)' : 'var(--tertiary-container)'}]`}></span>
+              <span className={`w-2 h-2 ${mode === MODES.SOCRATIC ? 'bg-[var(--secondary)]' : 'bg-[var(--tertiary-container)]'} shadow-[0_0_8px_${mode === MODES.SOCRATIC ? 'var(--secondary)' : 'var(--tertiary-container)'}]`}></span>
               <span className="label-sm text-[var(--on-surface-variant)]">
                 {mode === MODES.SOCRATIC ? 'SOCRATIC_PROTOCOL' : 'DIRECT_MODE'}
               </span>

@@ -46,7 +46,7 @@ const AuthScreen: React.FC = () => {
         <div className="mt-6 space-y-2 px-2">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
-              <span className="w-1.5 h-1.5 bg-[var(--tertiary-container)] rounded-full animate-pulse"></span>
+              <span className="w-1.5 h-1.5 bg-[var(--tertiary-container)] animate-pulse"></span>
               <span className="label-sm text-[0.6rem] text-[var(--on-surface)] tracking-[0.2em]">
                 SECURE_PROTOCOL: <span className="text-[var(--tertiary-container)]">ACTIVE</span>
               </span>

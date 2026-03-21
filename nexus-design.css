@@ -39,6 +39,10 @@
   --on-primary: #00373a;
   --on-primary-container: #006b71;
 
+  /* On-Secondary */
+  --on-secondary: #5b0057;
+  --on-secondary-container: #8e008a;
+
   /* On-Tertiary */
   --on-tertiary: #053900;
   --on-tertiary-container: #107000;

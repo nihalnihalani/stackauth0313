@@ -322,10 +322,10 @@ const LiveInterface: React.FC<LiveInterfaceProps> = ({ config, onClose, username
 
           {/* Header: Title + Status */}
           <div className="text-center space-y-3">
-             <h2 className="font-['Space_Grotesk'] text-2xl font-bold text-[var(--primary)] tracking-tight">VOICE_LINK</h2>
+             <h2 className="font-headline text-2xl font-bold text-[var(--primary)] tracking-tight">VOICE_LINK</h2>
              <div className="flex items-center justify-center gap-2">
-                <div className={`w-2 h-2 rounded-full animate-pulse ${statusDot}`} />
-                <span className={`font-['Space_Grotesk'] text-[0.6875rem] font-bold tracking-[0.3em] uppercase ${statusLabel.color}`}>
+                <div className={`w-2 h-2 animate-pulse ${statusDot}`} />
+                <span className={`font-headline text-[0.6875rem] font-bold tracking-[0.3em] uppercase ${statusLabel.color}`}>
                   {statusLabel.text}
                 </span>
              </div>
@@ -356,7 +356,7 @@ const LiveInterface: React.FC<LiveInterfaceProps> = ({ config, onClose, username
              {(status === 'error' || status === 'disconnected') && (
                  <button
                    onClick={handleReconnect}
-                   className="px-6 py-3 bg-transparent border border-[var(--primary-container)]/30 text-[var(--primary-container)] font-['Space_Grotesk'] font-semibold text-[0.6875rem] tracking-[0.15em] uppercase hover:bg-[var(--primary-container)]/10 hover:border-[var(--primary-container)]/60 transition-all flex items-center gap-2"
+                   className="px-6 py-3 bg-transparent border border-[var(--primary-container)]/30 text-[var(--primary-container)] font-headline font-semibold text-[0.6875rem] tracking-[0.15em] uppercase hover:bg-[var(--primary-container)]/10 hover:border-[var(--primary-container)]/60 transition-all flex items-center gap-2"
                    title="Reconnect"
                  >
                     <span className="material-symbols-outlined text-base" style={{ fontVariationSettings: "'FILL' 0" }}>refresh</span>
@@ -366,7 +366,7 @@ const LiveInterface: React.FC<LiveInterfaceProps> = ({ config, onClose, username
 
              <button
                onClick={onClose}
-               className="px-8 py-3 bg-[var(--error-container)] text-white font-['Space_Grotesk'] font-black text-[0.75rem] tracking-[0.2em] uppercase hover:brightness-125 transition-all flex items-center gap-3"
+               className="px-8 py-3 bg-[var(--error-container)] text-[var(--error)] font-headline font-black text-[0.75rem] tracking-[0.2em] uppercase hover:brightness-125 transition-all flex items-center gap-3"
                style={{ clipPath: 'polygon(0% 0%, 95% 0%, 100% 25%, 100% 100%, 5% 100%, 0% 75%)' }}
                title="End Session"
              >

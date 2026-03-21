@@ -38,7 +38,7 @@ const App: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen w-full bg-black text-white font-mono overflow-hidden">
+    <div className="min-h-screen w-full bg-[var(--surface)] text-[var(--on-surface)] font-body overflow-hidden">
       {user ? (
         <>
           {migrationInfo && (

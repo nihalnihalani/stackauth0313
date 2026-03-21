@@ -130,7 +130,7 @@ const HiveModal: React.FC<HiveModalProps> = ({ username, onClose, onSvgClick }) 
                        className="nexus-list-item group relative hover:border-l-[var(--secondary)]"
                     >
                         {/* Sender avatar with secondary accent */}
-                        <div className="w-8 h-8 rounded-full bg-[var(--secondary-container)]/20 border border-[var(--secondary)]/30 flex items-center justify-center text-[var(--secondary)] group-hover:border-[var(--secondary)] transition-colors flex-shrink-0">
+                        <div className="w-8 h-8 bg-[var(--secondary-container)]/20 border border-[var(--secondary)]/30 flex items-center justify-center text-[var(--secondary)] group-hover:border-[var(--secondary)] transition-colors flex-shrink-0">
                             <i className="fa-solid fa-user text-xs"></i>
                         </div>
                         <div className="flex-1 overflow-hidden">

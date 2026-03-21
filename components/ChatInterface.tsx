@@ -345,7 +345,7 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({ username, displayName, on
         <div className="flex items-center gap-6">
           <div className="flex items-center gap-2">
             <span className="font-headline text-xl font-bold text-[var(--primary-container)] tracking-tighter">NEXUS</span>
-            <span className="w-2 h-2 rounded-full bg-[var(--primary-container)] animate-pulse-glow"></span>
+            <span className="w-2 h-2 bg-[var(--primary-container)] animate-pulse-glow"></span>
           </div>
 
           <div className="hidden md:flex items-center gap-2">
@@ -403,8 +403,8 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({ username, displayName, on
             <span className="hidden md:inline">HIVE</span>
             {hiveMessages.length > 0 && (
                <span className="absolute -top-1 -right-1 flex h-3 w-3">
-                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[var(--secondary-container)] opacity-75"></span>
-                 <span className="relative inline-flex rounded-full h-3 w-3 bg-[var(--secondary-container)]"></span>
+                 <span className="animate-ping absolute inline-flex h-full w-full bg-[var(--secondary-container)] opacity-75"></span>
+                 <span className="relative inline-flex h-3 w-3 bg-[var(--secondary-container)]"></span>
                </span>
             )}
           </button>
