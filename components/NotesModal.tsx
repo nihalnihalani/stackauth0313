@@ -20,7 +20,7 @@ const NotesModal: React.FC<NotesModalProps> = ({ username, onClose, onSvgClick, 
   const [search, setSearch] = useState('');
   const [selectedNote, setSelectedNote] = useState<Note | null>(null);
   const [isProcessing, setIsProcessing] = useState(false);
-  
+
   // Transmit State
   const [isTransmitting, setIsTransmitting] = useState(false);
   const [recipient, setRecipient] = useState('');
@@ -69,10 +69,10 @@ const NotesModal: React.FC<NotesModalProps> = ({ username, onClose, onSvgClick, 
       const targetUser = recipient.trim();
       if (!selectedNote || !targetUser) return;
 
-      // Note: We skip the strict checkUserExists() call here because in a local simulation 
+      // Note: We skip the strict checkUserExists() call here because in a local simulation
       // with alasql, the 'users' table might not be synced across tabs immediately.
       // We assume the user knows the correct username.
-      
+
       transmitMutation.mutate({ note: selectedNote, recipient: targetUser });
   };
 
@@ -119,7 +119,7 @@ const NotesModal: React.FC<NotesModalProps> = ({ username, onClose, onSvgClick, 
 
         queryClient.invalidateQueries({ queryKey: ['notes', username] });
         setSearch(''); // Reset search to show new note
-        
+
     } catch (err: any) {
         alert(`Failed to import document: ${err.message}`);
     } finally {
@@ -129,81 +129,84 @@ const NotesModal: React.FC<NotesModalProps> = ({ username, onClose, onSvgClick, 
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/95 backdrop-blur-md p-4 animate-in fade-in">
-      <div className="w-full max-w-4xl h-[85vh] border border-white/20 bg-black p-8 rounded relative shadow-2xl shadow-white/5 flex flex-col">
-        <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-white/50 to-transparent"></div>
-        
-        <div className="flex justify-between items-center mb-6">
-          <h2 className="text-xl text-white font-bold tracking-widest uppercase flex items-center gap-2">
-            <i className="fa-solid fa-note-sticky text-sm"></i> Neural Archives
-          </h2>
-          <button onClick={onClose} className="text-white/50 hover:text-white">
-            <i className="fa-solid fa-times"></i>
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-[var(--surface)]/80 backdrop-blur-[12px] p-4">
+      <div className="w-full max-w-4xl h-[85vh] bg-[var(--surface-container-lowest)] border border-[var(--primary-container)]/30 shadow-[0_0_100px_rgba(0,243,255,0.1)] relative overflow-hidden flex flex-col">
+        {/* Header */}
+        <div className="nexus-modal-header">
+          <span className="font-headline font-black uppercase text-xs tracking-[0.15em] text-[var(--primary-container)]">NEURAL_ARCHIVES</span>
+          <button
+            onClick={onClose}
+            className="bg-[var(--surface-container)] border border-[var(--outline-variant)] text-[var(--on-surface-variant)] hover:text-[var(--primary-container)] transition-colors w-8 h-8 flex items-center justify-center"
+          >
+            <i className="fa-solid fa-times text-xs"></i>
           </button>
         </div>
 
         {selectedNote ? (
           // Detailed View
-          <div className="flex-1 flex flex-col overflow-hidden animate-in slide-in-right duration-300">
-            <div className="flex flex-col md:flex-row md:items-center gap-4 mb-4 border-b border-white/10 pb-4">
-               <button 
+          <div className="flex-1 flex flex-col overflow-hidden p-6">
+            <div className="flex flex-col md:flex-row md:items-center gap-4 mb-4 border-b border-[var(--outline-variant)]/20 pb-4">
+               <button
                   onClick={() => setSelectedNote(null)}
-                  className="text-white/40 hover:text-white uppercase text-xs tracking-widest flex items-center gap-2"
+                  className="text-[var(--on-surface-variant)] hover:text-[var(--primary-container)] uppercase text-xs tracking-widest flex items-center gap-2 font-headline"
                >
                   <i className="fa-solid fa-arrow-left"></i> Back
                </button>
                <div className="flex-1">
-                  <h3 className="text-lg font-bold text-white uppercase tracking-wider truncate">{selectedNote.title}</h3>
-                  <div className="text-[10px] text-white/30 uppercase tracking-widest">{safeDate(selectedNote.timestamp)}</div>
+                  <h3 className="text-lg font-bold text-[var(--on-surface)] font-headline uppercase tracking-wider truncate">{selectedNote.title}</h3>
+                  <div className="label-sm text-[var(--outline)] mt-1">{safeDate(selectedNote.timestamp)}</div>
                </div>
-               
+
                {/* Transmit Controls */}
                {isTransmitting ? (
-                   <form onSubmit={handleTransmitSubmit} className="flex items-center gap-2 animate-in fade-in slide-in-right">
-                       <input 
-                          type="text" 
-                          autoFocus
-                          placeholder="RECIPIENT_ID" 
-                          value={recipient}
-                          onChange={(e) => setRecipient(e.target.value)}
-                          className="bg-white/5 border border-white/20 text-white text-xs p-2 outline-none focus:border-cyan-400 w-32 uppercase placeholder:text-white/20"
-                       />
-                       <button 
+                   <form onSubmit={handleTransmitSubmit} className="flex items-center gap-2">
+                       <div className="relative">
+                         <i className="fa-solid fa-user absolute left-3 top-1/2 -translate-y-1/2 text-[var(--outline)] text-xs"></i>
+                         <input
+                            type="text"
+                            autoFocus
+                            placeholder="RECIPIENT_ID"
+                            value={recipient}
+                            onChange={(e) => setRecipient(e.target.value)}
+                            className="nexus-input w-40 text-xs"
+                         />
+                       </div>
+                       <button
                           type="submit"
                           disabled={transmitStatus !== 'idle'}
-                          className={`px-3 py-2 text-xs font-bold uppercase transition-all flex items-center gap-2 ${
-                              transmitStatus === 'success' ? 'bg-emerald-600 text-white' : 
-                              transmitStatus === 'error' ? 'bg-red-600 text-white' : 
-                              transmitStatus === 'not_found' ? 'bg-amber-600 text-white' :
-                              'bg-cyan-900/50 text-cyan-400 border border-cyan-400 hover:bg-cyan-400 hover:text-black'
+                          className={`px-3 py-2 text-xs font-bold uppercase transition-all flex items-center gap-2 font-headline tracking-widest ${
+                              transmitStatus === 'success' ? 'bg-[var(--tertiary-container)] text-[var(--on-tertiary)]' :
+                              transmitStatus === 'error' ? 'bg-[var(--error-container)] text-[var(--on-error)]' :
+                              transmitStatus === 'not_found' ? 'bg-[var(--secondary-container)] text-[var(--on-secondary)]' :
+                              'nexus-btn-primary'
                           }`}
                        >
-                           {transmitStatus === 'success' ? <i className="fa-solid fa-check"></i> : 
-                            transmitStatus === 'error' ? <i className="fa-solid fa-triangle-exclamation"></i> : 
+                           {transmitStatus === 'success' ? <i className="fa-solid fa-check"></i> :
+                            transmitStatus === 'error' ? <i className="fa-solid fa-triangle-exclamation"></i> :
                             transmitStatus === 'not_found' ? <span className="text-[9px]">USER NOT FOUND</span> :
                             <i className="fa-solid fa-paper-plane"></i>}
                        </button>
-                       <button 
+                       <button
                           type="button"
                           onClick={() => setIsTransmitting(false)}
-                          className="text-white/40 hover:text-white px-2"
+                          className="text-[var(--on-surface-variant)] hover:text-[var(--primary-container)] px-2"
                        >
                            <i className="fa-solid fa-times"></i>
                        </button>
                    </form>
                ) : (
-                   <button 
+                   <button
                       onClick={() => setIsTransmitting(true)}
-                      className="bg-white/5 hover:bg-white hover:text-black border border-white/20 transition-all px-4 py-2 uppercase text-xs tracking-widest font-bold flex items-center gap-2"
+                      className="nexus-btn-primary flex items-center gap-2"
                       title="Send to another user"
                    >
                       <i className="fa-solid fa-share-nodes"></i> Transmit
                    </button>
                )}
             </div>
-            
+
             <div className="flex-1 overflow-y-auto pr-2 no-scrollbar">
-               <div className="text-sm md:text-base leading-relaxed text-white/90">
+               <div className="text-sm md:text-base leading-relaxed text-[var(--primary)]">
                   <MarkdownRenderer content={selectedNote.content} onSvgClick={onSvgClick} />
                </div>
             </div>
@@ -211,21 +214,21 @@ const NotesModal: React.FC<NotesModalProps> = ({ username, onClose, onSvgClick, 
         ) : (
           // List View
           <>
-            <div className="mb-6 flex gap-2">
+            <div className="p-4 flex gap-2">
                 <div className="relative flex-1">
-                    <i className="fa-solid fa-search absolute left-3 top-1/2 -translate-y-1/2 text-white/30"></i>
-                    <input 
-                        type="text" 
-                        placeholder="SEARCH ARCHIVES..." 
+                    <i className="fa-solid fa-search absolute left-3 top-1/2 -translate-y-1/2 text-[var(--outline)] text-xs"></i>
+                    <input
+                        type="text"
+                        placeholder="SEARCH ARCHIVES..."
                         value={search}
                         onChange={(e) => setSearch(e.target.value)}
-                        className="w-full bg-white/5 border border-white/10 text-white p-3 pl-10 text-sm focus:border-white/50 outline-none rounded-sm placeholder:text-white/20 uppercase tracking-wider"
+                        className="nexus-input"
                     />
                 </div>
-                <button 
+                <button
                     onClick={handleImportClick}
                     disabled={isProcessing}
-                    className="border border-white/20 hover:bg-white hover:text-black transition-all px-4 flex items-center gap-2 text-white disabled:opacity-50"
+                    className="nexus-btn-secondary flex items-center gap-2 disabled:opacity-50"
                     title="Import PDF or Image as Note"
                 >
                     {isProcessing ? (
@@ -233,10 +236,10 @@ const NotesModal: React.FC<NotesModalProps> = ({ username, onClose, onSvgClick, 
                     ) : (
                         <i className="fa-solid fa-file-import"></i>
                     )}
-                    <span className="hidden md:inline uppercase text-xs tracking-widest font-bold">Import</span>
+                    <span className="hidden md:inline">Import</span>
                 </button>
-                <input 
-                    type="file" 
+                <input
+                    type="file"
                     ref={fileInputRef}
                     onChange={handleFileChange}
                     accept="application/pdf,image/*"
@@ -244,32 +247,32 @@ const NotesModal: React.FC<NotesModalProps> = ({ username, onClose, onSvgClick, 
                 />
             </div>
 
-            <div className="flex-1 overflow-y-auto space-y-4 pr-2 no-scrollbar">
+            <div className="flex-1 overflow-y-auto px-4 pb-4 space-y-1">
               {notes.length === 0 ? (
-                <div className="text-center text-white/30 text-xs tracking-wider mt-20">
+                <div className="text-center text-[var(--outline)] text-xs tracking-wider mt-20 uppercase font-headline">
                     {search ? 'NO MATCHING RECORDS' : 'ARCHIVE EMPTY'}
                 </div>
               ) : (
                 notes.map(note => (
-                  <div 
+                  <div
                     key={note.id}
                     onClick={() => setSelectedNote(note)}
-                    className="group border border-white/10 bg-white/5 p-6 relative flex flex-col gap-2 hover:border-white/30 transition-all cursor-pointer hover:bg-white/10"
+                    className="nexus-list-item group relative flex-col items-start gap-2"
                   >
-                    <div className="flex justify-between items-start">
-                        <h3 className="text-white font-bold tracking-wider uppercase text-sm border-b border-white/10 pb-2 pr-8 truncate w-full">{note.title}</h3>
-                        <button 
+                    <div className="flex justify-between items-start w-full">
+                        <h3 className="text-[var(--on-surface)] font-headline font-bold tracking-wider text-xs uppercase truncate flex-1 pr-6">{note.title}</h3>
+                        <button
                             onClick={(e) => handleDelete(e, note.id)}
-                            className="text-white/20 hover:text-red-500 transition-colors absolute right-4 top-6 z-10"
+                            className="border border-transparent text-[var(--outline)] hover:text-[var(--error)] hover:border-[var(--error)]/30 opacity-0 group-hover:opacity-100 transition-all px-2 py-1 absolute right-2 top-2"
                             title="Delete Note"
                         >
                             <i className="fa-solid fa-trash text-xs"></i>
                         </button>
                     </div>
-                    <div className="text-white/60 text-xs whitespace-pre-wrap font-mono leading-relaxed max-h-20 overflow-hidden relative">
+                    <div className="text-[var(--on-surface-variant)] text-xs font-mono leading-relaxed max-h-16 overflow-hidden w-full">
                         {note.content.substring(0, 150)}...
                     </div>
-                    <div className="text-[10px] text-white/30 uppercase tracking-widest mt-2 flex justify-end">
+                    <div className="label-sm text-[var(--outline)] mt-1 self-end">
                         Captured: {safeDate(note.timestamp)}
                     </div>
                   </div>
@@ -279,13 +282,13 @@ const NotesModal: React.FC<NotesModalProps> = ({ username, onClose, onSvgClick, 
           </>
         )}
       </div>
-      
+
       {/* Loading Overlay */}
       {isProcessing && (
-          <div className="absolute inset-0 bg-black/80 flex flex-col items-center justify-center z-[60] backdrop-blur-sm">
-             <i className="fa-solid fa-brain text-4xl animate-pulse text-white mb-4"></i>
-             <div className="text-white uppercase tracking-[0.2em] text-xs font-bold animate-pulse">Reading Document Structure...</div>
-             <div className="text-white/40 text-[10px] mt-2 tracking-widest">Converting to Markdown</div>
+          <div className="absolute inset-0 bg-[var(--surface)]/80 flex flex-col items-center justify-center z-[60] backdrop-blur-sm">
+             <i className="fa-solid fa-brain text-4xl animate-pulse text-[var(--primary-container)] mb-4"></i>
+             <div className="text-[var(--primary-container)] uppercase tracking-[0.2em] text-xs font-bold font-headline animate-pulse">Reading Document Structure...</div>
+             <div className="text-[var(--outline)] text-[10px] mt-2 tracking-widest font-headline">Converting to Markdown</div>
           </div>
       )}
     </div>

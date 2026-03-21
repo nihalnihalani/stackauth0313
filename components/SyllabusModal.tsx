@@ -78,7 +78,7 @@ const SyllabusModal: React.FC<SyllabusModalProps> = ({ username, onClose, config
     // 2. Try finding the first '{' and last '}' to isolate JSON object
     const firstBrace = text.indexOf('{');
     const lastBrace = text.lastIndexOf('}');
-    
+
     if (firstBrace !== -1 && lastBrace !== -1 && lastBrace > firstBrace) {
       const potentialJson = text.substring(firstBrace, lastBrace + 1);
       try { return JSON.parse(potentialJson); } catch(e) {}
@@ -86,7 +86,7 @@ const SyllabusModal: React.FC<SyllabusModalProps> = ({ username, onClose, config
 
     // 3. Last ditch: Direct parse attempt
     try { return JSON.parse(text); } catch(e) {}
-    
+
     return null;
   };
 
@@ -94,7 +94,7 @@ const SyllabusModal: React.FC<SyllabusModalProps> = ({ username, onClose, config
     setIsGenerating(true);
     setRawContent('');
     setParsedData(null);
-    
+
     let buffer = '';
 
     try {
@@ -102,7 +102,7 @@ const SyllabusModal: React.FC<SyllabusModalProps> = ({ username, onClose, config
         buffer += chunk;
         setRawContent(prev => prev + chunk);
       }, existingJson);
-      
+
       // Attempt Final Parse and Save
       const data = extractJson(buffer);
       if (data && data.modules) {
@@ -162,46 +162,46 @@ const SyllabusModal: React.FC<SyllabusModalProps> = ({ username, onClose, config
   const showFallback = !isGenerating && !parsedData && rawContent;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/95 backdrop-blur-md p-4 animate-in fade-in">
-      <div className="w-full max-w-4xl h-[85vh] border border-white/20 bg-black p-8 rounded relative shadow-2xl shadow-white/5 flex flex-col">
-        <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-white/50 to-transparent"></div>
-        
-        <div className="flex justify-between items-center mb-6">
-          <h2 className="text-xl text-white font-bold tracking-widest uppercase flex items-center gap-2">
-            <i className="fa-solid fa-layer-group text-sm"></i> Neural Curriculum
-          </h2>
-          <button onClick={onClose} className="text-white/50 hover:text-white">
-            <i className="fa-solid fa-times"></i>
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-[var(--surface)]/80 backdrop-blur-[12px] p-4">
+      <div className="w-full max-w-4xl h-[85vh] bg-[var(--surface-container-lowest)] border border-[var(--primary-container)]/30 shadow-[0_0_100px_rgba(0,243,255,0.1)] relative overflow-hidden flex flex-col">
+        {/* Header */}
+        <div className="nexus-modal-header">
+          <span className="font-headline font-black uppercase text-xs tracking-[0.15em] text-[var(--primary-container)]">CURRICULUM_MATRIX</span>
+          <button
+            onClick={onClose}
+            className="bg-[var(--surface-container)] border border-[var(--outline-variant)] text-[var(--on-surface-variant)] hover:text-[var(--primary-container)] transition-colors w-8 h-8 flex items-center justify-center"
+          >
+            <i className="fa-solid fa-times text-xs"></i>
           </button>
         </div>
 
-        <div className="flex-1 overflow-y-auto pr-2 no-scrollbar mb-4 border border-white/10 bg-white/5 p-6 rounded-sm">
-           
+        <div className="flex-1 overflow-y-auto p-6 mb-4">
+
            {(isGenerating && !parsedData) || isLoadingSyllabus ? (
-             <div className="flex flex-col items-center justify-center h-full text-white/50 gap-4">
-                <i className="fa-solid fa-circle-notch animate-spin text-2xl"></i>
-                <div className="text-xs tracking-widest uppercase">
+             <div className="flex flex-col items-center justify-center h-full text-[var(--outline)] gap-4">
+                <i className="fa-solid fa-circle-notch animate-spin text-2xl text-[var(--primary-container)]"></i>
+                <div className="text-xs tracking-widest uppercase font-headline">
                     {isLoadingSyllabus ? 'Loading Archives...' : 'Synthesizing Syllabus Structure...'}
                 </div>
              </div>
            ) : null}
 
            {parsedData && !isLoadingSyllabus && (
-             <div className="animate-in fade-in space-y-8">
-                <div className="text-center border-b border-white/10 pb-4 mb-8">
-                  <h1 className="text-2xl font-bold uppercase tracking-[0.2em] text-white">{parsedData.title}</h1>
-                  <div className="text-[10px] text-white/40 uppercase tracking-widest mt-2">
-                     Generated from {notes.length} Neural Archives 
+             <div className="space-y-8">
+                <div className="text-center border-b border-[var(--outline-variant)]/20 pb-4 mb-8">
+                  <h1 className="text-2xl font-bold uppercase tracking-[0.2em] text-[var(--primary)] font-headline">{parsedData.title}</h1>
+                  <div className="label-sm text-[var(--outline)] mt-2">
+                     Generated from {notes.length} Neural Archives
                      {savedSyllabus && notes.length === savedSyllabus.noteCount ? ' [CACHED]' : ' [UPDATING...]'}
                   </div>
                 </div>
 
                 {parsedData.modules?.map((mod, mIdx) => (
-                  <ModuleItem 
-                    key={mIdx} 
-                    module={mod} 
-                    index={mIdx} 
-                    onFork={onFork} 
+                  <ModuleItem
+                    key={mIdx}
+                    module={mod}
+                    index={mIdx}
+                    onFork={onFork}
                     onAssess={setAssessTopic}
                   />
                 ))}
@@ -209,24 +209,24 @@ const SyllabusModal: React.FC<SyllabusModalProps> = ({ username, onClose, config
            )}
 
            {showFallback && (
-             <div className="text-white/90 text-sm md:text-base leading-relaxed">
-               <div className="text-amber-500 text-xs uppercase tracking-widest mb-4">Structure Parsing Failed. Reverting to Raw Stream.</div>
+             <div className="text-[var(--primary)] text-sm md:text-base leading-relaxed">
+               <div className="text-[var(--error)] text-xs uppercase tracking-widest mb-4 font-headline">Structure Parsing Failed. Reverting to Raw Stream.</div>
                <MarkdownRenderer content={rawContent} onSvgClick={onSvgClick} />
              </div>
            )}
 
            {!isGenerating && !parsedData && !rawContent && !isLoadingSyllabus && (
-              <div className="flex items-center justify-center h-full text-white/30 tracking-widest text-xs">
+              <div className="flex items-center justify-center h-full text-[var(--outline)] tracking-widest text-xs font-headline uppercase">
                  NO DATA AVAILABLE.
               </div>
            )}
         </div>
 
-        <div className="flex justify-end gap-4">
-            <button 
-                onClick={() => handleGenerate()} 
+        <div className="px-6 pb-4 flex justify-end gap-4 border-t border-[var(--primary-container)]/20 pt-4">
+            <button
+                onClick={() => handleGenerate()}
                 disabled={isGenerating || notes.length === 0}
-                className="border border-white/20 hover:bg-white hover:text-black transition-all px-6 py-2 text-xs uppercase tracking-widest font-bold flex items-center gap-2 bg-black text-white disabled:opacity-50"
+                className="nexus-btn-secondary flex items-center gap-2 disabled:opacity-50"
             >
                 <i className="fa-solid fa-rotate"></i> Re-Analyze
             </button>
@@ -246,9 +246,9 @@ const SyllabusModal: React.FC<SyllabusModalProps> = ({ username, onClose, config
   );
 };
 
-const ModuleItem: React.FC<{ 
-    module: Module, 
-    index: number, 
+const ModuleItem: React.FC<{
+    module: Module,
+    index: number,
     onFork: (title: string) => void,
     onAssess: (title: string) => void
 }> = ({ module, index, onFork, onAssess }) => {
@@ -256,51 +256,51 @@ const ModuleItem: React.FC<{
 
   return (
     <div className="mb-6">
-      <button 
+      <button
         onClick={() => setExpanded(!expanded)}
-        className="w-full flex items-center gap-4 text-left group"
+        className="w-full flex items-center gap-4 text-left group bg-[var(--surface-container)] border-l-[3px] border-l-[var(--primary-container)] p-4 hover:bg-[var(--surface-container-high)] transition-colors"
       >
-        <div className="text-white/20 font-mono text-lg font-bold group-hover:text-white transition-colors">
+        <div className="text-[var(--primary-container)] font-headline font-bold text-lg">
           {String(index + 1).padStart(2, '0')}
         </div>
-        <div className="flex-1 border-b border-white/10 pb-2 group-hover:border-white/50 transition-colors">
-          <h3 className="text-white font-bold uppercase tracking-wider text-sm md:text-base">{module.title}</h3>
+        <div className="flex-1">
+          <h3 className="text-[var(--on-surface)] font-headline font-semibold uppercase tracking-wider text-sm md:text-base">{module.title}</h3>
         </div>
-        <i className={`fa-solid fa-chevron-down text-white/30 transition-transform ${expanded ? 'rotate-180' : ''}`}></i>
+        <i className={`fa-solid fa-chevron-down text-[var(--outline)] transition-transform ${expanded ? 'rotate-180' : ''}`}></i>
       </button>
 
       {expanded && (
-        <div className="pl-10 mt-4 space-y-4 border-l border-white/10 ml-2.5">
+        <div className="pl-10 mt-4 space-y-4 border-l border-[var(--outline-variant)] ml-2.5">
           {module.topics?.map((topic, tIdx) => (
             <div key={tIdx} className="relative group/topic">
               {/* Connector line */}
-              <div className="absolute -left-[31px] top-3 w-6 h-[1px] bg-white/10"></div>
-              
-              <h4 
-                className="text-white/90 font-bold uppercase text-xs tracking-wider mb-2 flex items-center gap-2 cursor-pointer hover:text-cyan-400 transition-colors"
+              <div className="absolute -left-[31px] top-3 w-6 h-[1px] bg-[var(--outline-variant)]"></div>
+
+              <h4
+                className="nexus-list-item text-[var(--on-surface)] hover:text-[var(--primary-container)] font-headline font-bold text-xs tracking-wider mb-2 cursor-pointer transition-colors"
                 onClick={() => onFork(topic.title)}
                 title="Start a new session on this topic"
               >
-                <span className="w-1.5 h-1.5 bg-white/50 rounded-full group-hover/topic:bg-cyan-400"></span>
+                <span className="w-1.5 h-1.5 bg-[var(--primary-container)]/50 group-hover/topic:bg-[var(--primary-container)] flex-shrink-0"></span>
                 {topic.title}
-                <i className="fa-solid fa-code-branch opacity-0 group-hover/topic:opacity-100 text-[9px] text-white/50 ml-2"></i>
+                <i className="fa-solid fa-code-branch opacity-0 group-hover/topic:opacity-100 text-[9px] text-[var(--outline)] ml-2"></i>
               </h4>
-              <ul className="pl-4 space-y-2">
+              <ul className="pl-8 space-y-2">
                 {(topic.subtopics || []).map((sub, sIdx) => (
-                  <li 
-                    key={sIdx} 
+                  <li
+                    key={sIdx}
                     className="flex items-center justify-between group/sub"
                   >
-                    <span 
-                        className="text-white/60 text-xs font-mono hover:text-white transition-colors cursor-pointer flex-1"
+                    <span
+                        className="text-[var(--on-surface-variant)] text-xs font-mono hover:text-[var(--primary)] transition-colors cursor-pointer flex-1"
                         onClick={() => onFork(sub)}
                         title="Start a new session on this sub-topic"
                     >
-                      {`> ${sub}`}
+                      <span className="text-[var(--outline-variant)] mr-2">{'>'}</span>{sub}
                     </span>
                     <button
                         onClick={() => onAssess(sub)}
-                        className="text-cyan-600 hover:text-cyan-400 transition-colors px-2 py-0.5"
+                        className="text-[var(--secondary-container)] hover:text-[var(--secondary)] transition-colors px-2 py-0.5"
                         title="Take Assessment"
                     >
                         <i className="fa-solid fa-bullseye text-[12px]"></i>

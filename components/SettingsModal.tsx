@@ -10,57 +10,69 @@ interface SettingsModalProps {
 
 const SettingsModal: React.FC<SettingsModalProps> = ({ config, setConfig, onClose }) => {
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/95 backdrop-blur-md p-4 animate-in fade-in">
-      <div className="w-full max-w-md border border-white/20 bg-black p-8 rounded relative shadow-2xl shadow-white/5">
-        <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-white/50 to-transparent"></div>
-        <h2 className="text-xl text-white mb-6 font-bold tracking-widest uppercase flex items-center gap-2">
-          <i className="fa-solid fa-network-wired text-sm"></i> Neural Configuration
-        </h2>
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-[var(--surface)]/80 backdrop-blur-[12px] p-4">
+      <div className="w-full max-w-md bg-[var(--surface-container-lowest)] border border-[var(--primary-container)]/30 shadow-[0_0_100px_rgba(0,243,255,0.1)] relative overflow-hidden">
+        {/* Header */}
+        <div className="nexus-modal-header">
+          <span className="font-headline font-black uppercase text-xs tracking-[0.15em] text-[var(--primary-container)]">CONFIGURATION</span>
+          <button
+            onClick={onClose}
+            className="bg-[var(--surface-container)] border border-[var(--outline-variant)] text-[var(--on-surface-variant)] hover:text-[var(--primary-container)] transition-colors w-8 h-8 flex items-center justify-center"
+          >
+            <i className="fa-solid fa-times text-xs"></i>
+          </button>
+        </div>
 
-        <div className="space-y-4">
+        <div className="p-6 space-y-4">
           <div>
-            <label className="block text-xs text-white/50 uppercase tracking-wider mb-2">Provider Node</label>
-            <select
-              value={config.provider}
-              onChange={(e) => setConfig({ ...config, provider: e.target.value, model: '' })}
-              className="w-full bg-white/5 border border-white/10 text-white p-2 text-sm focus:border-white/50 outline-none rounded-sm"
-            >
-              <option value={PROVIDERS.GOOGLE}>GOOGLE GEMINI</option>
-              <option value={PROVIDERS.OPENAI}>OPENAI</option>
-              <option value={PROVIDERS.ANTHROPIC}>ANTHROPIC</option>
-              <option value={PROVIDERS.OLLAMA}>OLLAMA (LOCAL)</option>
-            </select>
+            <label className="label-sm text-[var(--on-surface-variant)] block mb-2">Provider Node</label>
+            <div className="relative">
+              <i className="fa-solid fa-network-wired absolute left-3 top-1/2 -translate-y-1/2 text-[var(--outline)] text-xs"></i>
+              <select
+                value={config.provider}
+                onChange={(e) => setConfig({ ...config, provider: e.target.value, model: '' })}
+                className="nexus-input"
+              >
+                <option value={PROVIDERS.GOOGLE}>GOOGLE GEMINI</option>
+                <option value={PROVIDERS.OPENAI}>OPENAI</option>
+                <option value={PROVIDERS.ANTHROPIC}>ANTHROPIC</option>
+                <option value={PROVIDERS.OLLAMA}>OLLAMA (LOCAL)</option>
+              </select>
+            </div>
           </div>
 
           <div>
-            <label className="block text-xs text-white/50 uppercase tracking-wider mb-2">Model Designation</label>
-            <input
-              type="text"
-              value={config.model}
-              onChange={(e) => setConfig({ ...config, model: e.target.value })}
-              placeholder={
-                config.provider === PROVIDERS.GOOGLE ? 'gemini-3-pro-preview' :
-                  config.provider === PROVIDERS.OPENAI ? 'gpt-4o' :
-                    config.provider === PROVIDERS.ANTHROPIC ? 'claude-3-5-sonnet-20240620' :
-                      'llama3'
-              }
-              className="w-full bg-white/5 border border-white/10 text-white p-2 text-sm focus:border-white/50 outline-none rounded-sm placeholder:text-white/10"
-            />
+            <label className="label-sm text-[var(--on-surface-variant)] block mb-2">Model Designation</label>
+            <div className="relative">
+              <i className="fa-solid fa-microchip absolute left-3 top-1/2 -translate-y-1/2 text-[var(--outline)] text-xs"></i>
+              <input
+                type="text"
+                value={config.model}
+                onChange={(e) => setConfig({ ...config, model: e.target.value })}
+                placeholder={
+                  config.provider === PROVIDERS.GOOGLE ? 'gemini-3-pro-preview' :
+                    config.provider === PROVIDERS.OPENAI ? 'gpt-4o' :
+                      config.provider === PROVIDERS.ANTHROPIC ? 'claude-3-5-sonnet-20240620' :
+                        'llama3'
+                }
+                className="nexus-input"
+              />
+            </div>
           </div>
 
-          <div className="mt-4 p-3 border border-white/10 bg-white/5 rounded-sm">
-            <p className="text-[10px] text-white/40 uppercase tracking-wider">
+          <div className="p-3 border border-[var(--outline-variant)] bg-[var(--surface-container)]">
+            <p className="text-[10px] text-[var(--outline)] uppercase tracking-wider font-headline">
               API keys are managed server-side. Contact your administrator to configure providers.
             </p>
           </div>
         </div>
 
-        <div className="mt-8 flex justify-end gap-4">
+        <div className="px-6 pb-6 flex justify-end">
           <button
             onClick={onClose}
-            className="px-6 py-2 border border-white/20 text-white hover:bg-white hover:text-black transition-all text-xs uppercase tracking-widest font-bold"
+            className="nexus-btn-primary"
           >
-            Confirm Sequence
+            CONFIRM_SEQUENCE
           </button>
         </div>
       </div>

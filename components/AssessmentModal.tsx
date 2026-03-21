@@ -33,7 +33,7 @@ const AssessmentModal: React.FC<AssessmentModalProps> = ({ topic, notes, config,
         const jsonMatch = buffer.match(/\[[\s\S]*\]/);
         const jsonStr = jsonMatch ? jsonMatch[0] : buffer;
         const parsed = JSON.parse(jsonStr);
-        
+
         if (Array.isArray(parsed)) {
           setQuestions(parsed);
         } else {
@@ -67,80 +67,120 @@ const AssessmentModal: React.FC<AssessmentModalProps> = ({ topic, notes, config,
     setSubmitted(true);
   };
 
+  const scorePercent = questions.length > 0 ? Math.round((score / questions.length) * 100) : 0;
+
   return (
-    <div className="fixed inset-0 z-[60] flex items-center justify-center bg-black/95 backdrop-blur-md p-4 animate-in fade-in">
-      <div className="w-full max-w-2xl h-[85vh] border border-white/20 bg-black p-8 rounded relative shadow-2xl shadow-white/5 flex flex-col">
-        <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-cyan-500/50 to-transparent"></div>
-        
-        <div className="flex justify-between items-center mb-6">
-          <h2 className="text-xl text-white font-bold tracking-widest uppercase flex items-center gap-2">
-            <i className="fa-solid fa-clipboard-check text-cyan-400 text-lg"></i> Assessment: {topic}
-          </h2>
-          <button onClick={onClose} className="text-white/50 hover:text-white">
-            <i className="fa-solid fa-times"></i>
+    <div className="fixed inset-0 z-[60] flex items-center justify-center bg-[var(--surface)]/80 backdrop-blur-[12px] p-4">
+      <div className="w-full max-w-2xl h-[85vh] bg-[var(--surface-container-lowest)] border border-[var(--primary-container)]/30 shadow-[0_0_100px_rgba(0,243,255,0.1)] relative overflow-hidden flex flex-col">
+        {/* Header - Magenta / secondary accent */}
+        <div className="bg-[var(--secondary)]/10 border-b border-[var(--secondary)]/20 px-6 py-3 flex justify-between items-center">
+          <div className="flex items-center gap-3">
+            <i className="fa-solid fa-clipboard-check text-[var(--secondary)] animate-pulse"></i>
+            <span className="font-headline font-black uppercase text-xs tracking-[0.15em] text-[var(--secondary)]">ASSESSMENT_PROTOCOL</span>
+          </div>
+          <button
+            onClick={onClose}
+            className="bg-[var(--surface-container)] border border-[var(--outline-variant)] text-[var(--on-surface-variant)] hover:text-[var(--primary-container)] transition-colors w-8 h-8 flex items-center justify-center"
+          >
+            <i className="fa-solid fa-times text-xs"></i>
           </button>
         </div>
 
-        <div className="flex-1 overflow-y-auto pr-2 no-scrollbar">
+        {/* Topic badge */}
+        <div className="px-6 pt-4 pb-2">
+          <span className="nexus-badge-warning">
+            <i className="fa-solid fa-bullseye text-[8px]"></i>
+            {topic}
+          </span>
+        </div>
+
+        <div className="flex-1 overflow-y-auto px-6 pb-6">
           {loading ? (
-            <div className="flex flex-col items-center justify-center h-full text-white/50 gap-4">
-              <i className="fa-solid fa-circle-notch animate-spin text-2xl text-cyan-400"></i>
-              <div className="text-xs tracking-widest uppercase">Generating Neural Assessment...</div>
+            <div className="flex flex-col items-center justify-center h-full text-[var(--outline)] gap-4">
+              <i className="fa-solid fa-circle-notch animate-spin text-2xl text-[var(--secondary)]"></i>
+              <div className="text-xs tracking-widest uppercase font-headline">Generating Neural Assessment...</div>
             </div>
           ) : questions.length === 0 ? (
-            <div className="flex items-center justify-center h-full text-white/30 text-xs tracking-widest uppercase">
+            <div className="flex items-center justify-center h-full text-[var(--outline)] text-xs tracking-widest uppercase font-headline">
               Failed to generate quiz. Please try again.
             </div>
           ) : (
             <div className="space-y-8 pb-8">
+              {/* Progress Bar */}
+              <div className="w-full h-1 bg-[var(--surface-container-high)] relative mt-2">
+                <div
+                  className="absolute left-0 top-0 h-full bg-[var(--primary-container)] transition-all duration-300"
+                  style={{ width: `${(Object.keys(answers).length / questions.length) * 100}%` }}
+                ></div>
+                <div className="absolute -right-2 top-4 label-sm text-[var(--primary-container)]">
+                  {Object.keys(answers).length} / {questions.length}
+                </div>
+              </div>
+
               {questions.map((q, idx) => {
                 const isCorrect = submitted && answers[q.id] === q.correctAnswerIndex;
                 const isWrong = submitted && answers[q.id] !== q.correctAnswerIndex && answers[q.id] !== undefined;
 
                 return (
-                  <div key={q.id} className="animate-in fade-in slide-in-right" style={{ animationDelay: `${idx * 100}ms` }}>
-                    <div className="text-white font-bold mb-4 text-sm md:text-base flex gap-3">
-                      <span className="text-cyan-500">{idx + 1}.</span>
+                  <div key={q.id} className="mt-6">
+                    <div className="text-[var(--primary)] font-headline font-bold mb-4 text-sm md:text-base flex gap-3">
+                      <span className="text-[var(--secondary)]">{idx + 1}.</span>
                       {q.question}
                     </div>
-                    
+
                     <div className="space-y-2 pl-6">
                       {q.options.map((opt, optIdx) => {
                         const isSelected = answers[q.id] === optIdx;
-                        let optionClass = "border-white/10 hover:border-white/50 text-white/70";
-                        
+                        let optionBg = 'bg-[var(--surface-container)]';
+                        let optionBorder = 'border border-[var(--outline-variant)]/20 hover:border-[var(--primary-container)]';
+                        let optionText = 'text-[var(--on-surface)]';
+                        let indicatorBorder = 'border-[var(--outline)]';
+
                         if (submitted) {
                            if (optIdx === q.correctAnswerIndex) {
-                               optionClass = "border-emerald-500 bg-emerald-500/10 text-emerald-400";
+                               optionBg = 'bg-[var(--tertiary-container)]/10';
+                               optionBorder = 'border-2 border-[var(--tertiary-container)]';
+                               optionText = 'text-[var(--tertiary)]';
+                               indicatorBorder = 'border-[var(--tertiary-container)]';
                            } else if (isSelected) {
-                               optionClass = "border-red-500 bg-red-500/10 text-red-400";
+                               optionBg = 'bg-[var(--error-container)]/10';
+                               optionBorder = 'border-2 border-[var(--error)]';
+                               optionText = 'text-[var(--error)]';
+                               indicatorBorder = 'border-[var(--error)]';
                            } else {
-                               optionClass = "border-white/5 text-white/30 opacity-50";
+                               optionBg = 'bg-[var(--surface-container)]';
+                               optionBorder = 'border border-[var(--outline-variant)]/10';
+                               optionText = 'text-[var(--on-surface-variant)] opacity-50';
                            }
                         } else if (isSelected) {
-                           optionClass = "border-cyan-400 bg-cyan-900/20 text-cyan-400";
+                           optionBg = 'bg-[var(--primary-container)]/5';
+                           optionBorder = 'border-2 border-[var(--primary-container)]';
+                           optionText = 'text-[var(--primary)]';
+                           indicatorBorder = 'border-[var(--primary-container)]';
                         }
 
                         return (
-                          <div 
+                          <div
                             key={optIdx}
                             onClick={() => handleSelect(q.id, optIdx)}
-                            className={`border p-3 rounded-sm text-sm cursor-pointer transition-all flex items-center gap-3 ${optionClass}`}
+                            className={`flex items-center p-4 ${optionBg} ${optionBorder} ${optionText} cursor-pointer transition-all`}
                           >
-                            <div className={`w-3 h-3 rounded-full border flex items-center justify-center ${
-                                isSelected || (submitted && optIdx === q.correctAnswerIndex) ? 'border-current' : 'border-white/30'
-                            }`}>
-                                {(isSelected || (submitted && optIdx === q.correctAnswerIndex)) && <div className="w-1.5 h-1.5 rounded-full bg-current"></div>}
+                            <div className={`w-6 h-6 border-2 ${indicatorBorder} flex items-center justify-center mr-4 flex-shrink-0`}>
+                              {isSelected || (submitted && optIdx === q.correctAnswerIndex) ? (
+                                <div className="w-3 h-3 bg-current"></div>
+                              ) : (
+                                <span className="text-[10px] font-headline font-bold">{String.fromCharCode(65 + optIdx)}</span>
+                              )}
                             </div>
-                            {opt}
+                            <p className="text-sm font-body">{opt}</p>
                           </div>
                         );
                       })}
                     </div>
 
                     {submitted && (
-                       <div className="mt-4 ml-6 p-4 bg-white/5 border border-white/10 rounded-sm text-xs text-white/80 leading-relaxed">
-                          <strong className="text-white/50 uppercase tracking-wider block mb-1">Explanation:</strong>
+                       <div className="mt-4 ml-6 p-4 bg-[var(--surface-container)] border border-[var(--outline-variant)]/20 text-xs text-[var(--on-surface-variant)] leading-relaxed">
+                          <strong className="text-[var(--outline)] uppercase tracking-wider block mb-1 font-headline">Explanation:</strong>
                           {q.explanation}
                        </div>
                     )}
@@ -151,30 +191,35 @@ const AssessmentModal: React.FC<AssessmentModalProps> = ({ topic, notes, config,
           )}
         </div>
 
-        <div className="pt-6 border-t border-white/10 flex justify-between items-center">
+        <div className="px-6 pb-4 pt-4 border-t border-[var(--outline-variant)]/20 flex justify-between items-center">
             {submitted ? (
-                <div className="text-lg font-bold uppercase tracking-widest">
-                    Score: <span className={score >= questions.length * 0.6 ? 'text-emerald-400' : 'text-red-400'}>{score} / {questions.length}</span>
+                <div className="font-headline font-black text-[2rem] uppercase tracking-widest">
+                    <span className={scorePercent >= 60 ? 'text-[var(--tertiary-container)]' : 'text-[var(--error)]'}>
+                      {scorePercent}%
+                    </span>
+                    <span className="text-[var(--outline)] text-sm ml-3 font-normal">
+                      ({score}/{questions.length})
+                    </span>
                 </div>
             ) : (
-                <div className="text-xs text-white/30 uppercase tracking-widest">
+                <div className="label-sm text-[var(--outline)]">
                    {Object.keys(answers).length} / {questions.length} Answered
                 </div>
             )}
 
             {!submitted && !loading && questions.length > 0 && (
-                <button 
+                <button
                     onClick={handleSubmit}
                     disabled={Object.keys(answers).length < questions.length}
-                    className="bg-cyan-600 text-white hover:bg-cyan-500 transition-colors px-6 py-2 uppercase text-xs tracking-widest font-bold disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="nexus-btn-primary disabled:opacity-50 disabled:cursor-not-allowed"
                 >
-                    Submit Assessment
+                    Submit Response
                 </button>
             )}
              {submitted && (
-                <button 
+                <button
                     onClick={onClose}
-                    className="border border-white/20 text-white hover:bg-white hover:text-black transition-colors px-6 py-2 uppercase text-xs tracking-widest font-bold"
+                    className="nexus-btn-secondary"
                 >
                     Close
                 </button>
