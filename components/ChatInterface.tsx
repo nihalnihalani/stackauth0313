@@ -364,7 +364,7 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({ username, displayName, on
               }`}
               title="Switch Model Core"
             >
-              {config.model === MODELS.GEMINI_3_1_PRO ? 'G-3.0 PRO' : 'G-2.5 FLASH'}
+              {config.model === MODELS.GEMINI_3_1_PRO ? 'G-3.1 PRO' : 'G-2.5 FLASH'}
             </button>
 
             {/* New Session */}

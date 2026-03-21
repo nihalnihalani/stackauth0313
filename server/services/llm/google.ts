@@ -4,6 +4,8 @@ import { Message, Attachment } from '../../types.js';
 
 const FAST_MODEL = 'gemini-3-flash-preview';
 const THINKING_MODEL = 'gemini-3.1-pro-preview';
+// Available: gemini-3.1-pro-preview, gemini-3-flash-preview, gemini-3.1-flash-lite-preview
+// Also: gemini-2.5-pro, gemini-2.5-flash, gemini-2.5-flash-lite
 
 function getAI() {
   return new GoogleGenAI({ apiKey: config.geminiApiKey });

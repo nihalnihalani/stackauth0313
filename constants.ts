@@ -1,24 +1,26 @@
 
 
 export const MODELS = {
-  // Latest Gemini 3.1 series (March 2026)
+  // Gemini 3.1 series (current flagship)
   GEMINI_3_1_PRO: 'gemini-3.1-pro-preview',
   GEMINI_3_FLASH: 'gemini-3-flash-preview',
   GEMINI_3_1_FLASH_LITE: 'gemini-3.1-flash-lite-preview',
-  // Complex reasoning (best quality)
-  THINKING: 'gemini-3.1-pro-preview',
-  // Fast tasks (balanced speed/quality)
-  FAST: 'gemini-3-flash-preview',
-  // Ultra fast (cheapest)
-  LITE: 'gemini-3.1-flash-lite-preview',
-  // Legacy
+  // Aliases by capability tier
+  THINKING: 'gemini-3.1-pro-preview',       // Complex reasoning (best quality)
+  FAST: 'gemini-3-flash-preview',            // Fast tasks (balanced speed/quality)
+  LITE: 'gemini-3.1-flash-lite-preview',     // Ultra fast (cheapest)
+  // Gemini 2.5 series (advanced reasoning)
+  GEMINI_2_5_PRO: 'gemini-2.5-pro',
   GEMINI_2_5_FLASH: 'gemini-2.5-flash',
+  GEMINI_2_5_FLASH_LITE: 'gemini-2.5-flash-lite',
   // Image Generation
-  IMAGE_GEN: 'gemini-3-pro-image-preview',
-  // Image Editing
-  IMAGE_EDIT: 'gemini-2.5-flash-image',
-  // Live Audio
-  LIVE_AUDIO: 'gemini-2.5-flash-native-audio-preview-09-2025'
+  IMAGE_GEN: 'gemini-3.1-flash-image-preview',
+  IMAGE_GEN_PRO: 'gemini-3-pro-image-preview',
+  // Live Audio (updated to latest preview)
+  LIVE_AUDIO: 'gemini-2.5-flash-native-audio-preview-12-2025',
+  // Text-to-Speech
+  TTS: 'gemini-2.5-flash-preview-tts',
+  TTS_PRO: 'gemini-2.5-pro-preview-tts',
 };
 
 export const PROVIDERS = {

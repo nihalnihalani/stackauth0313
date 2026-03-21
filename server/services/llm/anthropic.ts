@@ -75,7 +75,7 @@ export async function streamAnthropic(params: {
       // No 'anthropic-dangerously-allow-browser' needed server-side
     },
     body: JSON.stringify({
-      model: params.model || 'claude-3-5-sonnet-20240620',
+      model: params.model || 'claude-sonnet-4-6',
       max_tokens: 4096,
       system: systemText,
       messages: anthropicMessages,
@@ -111,7 +111,7 @@ export async function generateAnthropic(params: {
 }): Promise<string> {
   let fullText = '';
   await streamAnthropic({
-    model: params.model || 'claude-3-5-sonnet-20240620',
+    model: params.model || 'claude-sonnet-4-6',
     systemInstruction: params.systemInstruction || '',
     history: [],
     prompt: params.prompt,
@@ -147,7 +147,7 @@ export async function processDocumentAnthropic(params: {
       'content-type': 'application/json',
     },
     body: JSON.stringify({
-      model: params.model || 'claude-3-5-sonnet-20240620',
+      model: params.model || 'claude-sonnet-4-6',
       max_tokens: 4096,
       messages: [{ role: 'user', content }],
     }),
